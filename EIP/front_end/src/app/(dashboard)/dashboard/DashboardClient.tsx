@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { Search, FolderOpen, Plus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import apiService from "@/services/api";
 import ApplicationCard from "@/components/Card/Dashboardcard";
@@ -75,11 +76,9 @@ export default function DashboardClient({
 	const handleUpdateApplication = async () => {
 		if (!selectedApplication) return;
 		try {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { id, createdAt, ...updateData } = selectedApplication;
 			const updatedApp = await apiService.put<Application>(
-				`/job_applies/${selectedApplication.id}/status`,
-				updateData
+				`/job_applies/${selectedApplication.id}`,
+				selectedApplication
 			);
 			if (updatedApp) {
 				setApplications((prev) =>
@@ -197,8 +196,10 @@ export default function DashboardClient({
 					</div>
 					<div className={styles.bannerActions}>
 						<button className={styles.addApplicationBtn} onClick={openAddPopup}>
-							+ {t("dashboard.addApplication") as string}
+							<Plus size={20} strokeWidth={2.5} />
+							<span>{t("dashboard.addApplication") as string}</span>
 						</button>
+
 						<div className={styles.searchContainer} role="search">
 							<input
 								type="search"
@@ -208,9 +209,7 @@ export default function DashboardClient({
 								onChange={(e) => setSearchTerm(e.target.value)}
 								aria-label={t("dashboard.search.label") as string}
 							/>
-							<span className={styles.searchIcon} aria-hidden="true">
-								🔍
-							</span>
+							<Search className={styles.searchIcon} size={20} aria-hidden="true" />
 						</div>
 					</div>
 				</header>
@@ -341,7 +340,9 @@ export default function DashboardClient({
 								))
 							) : (
 								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>📂</div>
+									<div className={styles.emptyIcon}>
+										<FolderOpen size={48} />
+									</div>
 									<h3 className={styles.emptyTitle}>
 										{t("dashboard.empty.title") as string}
 									</h3>
@@ -369,7 +370,9 @@ export default function DashboardClient({
 								))
 							) : (
 								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>📂</div>
+									<div className={styles.emptyIcon}>
+										<FolderOpen size={48} />
+									</div>
 									<h3 className={styles.emptyTitle}>
 										{t("dashboard.empty.title") as string}
 									</h3>

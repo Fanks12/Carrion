@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { Search, FileText } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import apiService from "@/services/api";
 import ApplicationCard from "@/components/Card/Dashboardcard";
@@ -26,7 +27,7 @@ export default function ArchivesClient({
 	const [applications, setApplications] =
 		useState<Application[]>(initialApplications);
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+	const [viewMode] = useState<"grid" | "list">("grid");
 	const [sortBy, setSortBy] = useState<"date" | "status">("date");
 	const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(
 		new Set()
@@ -53,17 +54,13 @@ export default function ArchivesClient({
 	const handleUpdateApplication = async () => {
 		if (!selectedApplication) return;
 		try {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { id, createdAt, ...updateData } = selectedApplication;
 			const updatedApp = await apiService.put<Application>(
 				`/job_applies/${selectedApplication.id}/archived-status`,
-				updateData
+				selectedApplication
 			);
-			if (updatedApp) {
-				setApplications((prev) =>
-					prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
-				);
-			}
+			setApplications((prev) =>
+				prev.map((app) => (app.id === updatedApp!.id ? updatedApp! : app))
+			);
 			closePopup();
 		} catch (err: unknown) {
 			console.error(t("dashboard.errors.updateError"), err);
@@ -169,7 +166,7 @@ export default function ArchivesClient({
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
-						<span className={styles.searchIcon}>🔍</span>
+						<Search className={styles.searchIcon} size={20} />
 					</div>
 				</header>
 
@@ -242,22 +239,6 @@ export default function ArchivesClient({
 								</option>
 							</select>
 						</div>
-						<div className={styles.viewToggle}>
-							<button
-								className={`${styles.toggleButton} ${viewMode === "grid" ? styles.active : ""
-									}`}
-								onClick={() => setViewMode("grid")}
-							>
-								{t("shared.viewModes.grid") as string}
-							</button>
-							<button
-								className={`${styles.toggleButton} ${viewMode === "list" ? styles.active : ""
-									}`}
-								onClick={() => setViewMode("list")}
-							>
-								{t("shared.viewModes.list") as string}
-							</button>
-						</div>
 					</div>
 				</section>
 
@@ -283,7 +264,9 @@ export default function ArchivesClient({
 								))
 							) : (
 								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>📄</div>
+									<div className={styles.emptyIcon}>
+										<FileText size={48} />
+									</div>
 									<h3 className={styles.emptyTitle}>
 										{t("archives.empty.title") as string}
 									</h3>
@@ -309,7 +292,9 @@ export default function ArchivesClient({
 								))
 							) : (
 								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>📄</div>
+									<div className={styles.emptyIcon}>
+										<FileText size={48} />
+									</div>
 									<h3 className={styles.emptyTitle}>
 										{t("archives.empty.title") as string}
 									</h3>
