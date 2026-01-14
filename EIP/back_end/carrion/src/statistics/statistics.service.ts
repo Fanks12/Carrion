@@ -12,6 +12,7 @@ export class StatisticsService {
     const sevenDaysAgo = subDays(now, 6);
     const thirtyDaysAgo = subDays(now, 29);
 
+  try {
     const [
       totalApplications,
       applicationsToday,
@@ -61,7 +62,7 @@ export class StatisticsService {
     const PERSONAL_GOAL = 10;
     const personalGoalAchieved = applicationsLast7Days >= PERSONAL_GOAL;
 
-    return {
+    const result = {
       totalApplications,
       applicationsToday,
       applicationsThisWeek: applicationsLast7Days,
@@ -82,7 +83,12 @@ export class StatisticsService {
         current: applicationsLast7Days,
       },
     };
+    return result;
+  } catch (error) {
+    console.error('Error in getStatistics service:', error);
+    throw error;
   }
+}
 
   private async getGroupedCount(
     userId: string,
