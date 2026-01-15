@@ -7,7 +7,7 @@ export default function Index() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <WebView
-        source={{ uri: 'https://carrion.up.railway.app/' }}
+        source={{ uri: 'https://carrion.website/' }}
         style={styles.webview}
         javaScriptEnabled={true}
         domStorageEnabled={true}
