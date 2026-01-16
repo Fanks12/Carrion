@@ -11,7 +11,6 @@ import ApiService from "@/services/api";
 import LanguageDropdown from "@/components/LanguageDropdown/LanguageDropdown";
 import ToggleSwitch from "@/components/ToggleSwitch/ToggleSwitch";
 import SubscriptionModal from "@/components/SubscriptionModal/SubscriptionModal";
-import SubscriptionModal from "@/components/SubscriptionModal/SubscriptionModal";
 import styles from "./NavBar.module.css";
 
 export default function Navbar({ children }: { children: React.ReactNode }) {
@@ -141,6 +140,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 							height={40}
 							className={styles.avatar}
 							onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+							unoptimized
 						/>
 						{isDropdownOpen && (
 							<ul className={styles.dropdownMenu}>

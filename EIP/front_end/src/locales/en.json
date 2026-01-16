@@ -107,11 +107,8 @@
     "notification": "Notifications",
     "ranking": "Ranking",
     "friends": "Friends",
-    "friends": "Friends",
     "logout": "Logout",
     "seeAll": "View all notifications",
-    "organization": "Organization",
-    "subscribe": "Subscribe"
     "organization": "Organization",
     "subscribe": "Subscribe"
   },
@@ -235,9 +232,10 @@
     "expiredLinkMessage": "This link has expired or has already been used.",
     "criteria": {
       "length": "At least 8 characters",
-      "letter": "Contains a letter",
+      "upper": "Contains an uppercase letter",
+      "lower": "Contains a lowercase letter",
       "number": "Contains a number",
-      "special": "Contains a special character (@$!%*#?&)"
+      "special": "Contains a special character"
     },
     "resetYourPassword": "Reset your password",
     "forgotPasswordInstructions": "Please enter your email address. We will send you a link to reset your password.",

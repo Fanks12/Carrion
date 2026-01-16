@@ -360,7 +360,7 @@ export class AuthService {
       name === 'Microsoft_oauth2'
         ? this.calculateTokenExpiration(90)
         : new Date('9999-12-31T23:59:59Z');
-    await this.prisma.token.upsert({
+    const prismaAnswer = await this.prisma.token.upsert({
       where: { name_providerId: { name, providerId } },
       update: {
         accessToken,
@@ -380,6 +380,8 @@ export class AuthService {
         tokenTimeValidity: refreshTokenExpires,
       },
     });
+    console.log('token créée ?');
+    console.log(prismaAnswer);
   }
 
   async validateUser(
@@ -612,7 +614,7 @@ export class AuthService {
     userId: string,
   ): Promise<string | void> {
     const webhookUrl = `${process.env.BACK}/webhook/outlook`;
-    const expirationDateTime = new Date(Date.now() + 4230 * 60 * 1000);
+    const expirationDateTime = new Date(Date.now() + 4000 * 60 * 1000);
     try {
       const response = await firstValueFrom(
         this.httpService.post(
@@ -620,7 +622,7 @@ export class AuthService {
           {
             changeType: 'created',
             notificationUrl: webhookUrl,
-            resource: "me/mailFolders('inbox')/messages",
+            resource: "me/mailFolders('Inbox')/messages",
             expirationDateTime: expirationDateTime.toISOString(),
             clientState: `${userId}-outlook`,
           },
@@ -635,8 +637,15 @@ export class AuthService {
       });
       return subscriptionId;
     } catch (error) {
-      if (error.response?.status >= 400 && error.response?.status < 500)
+      if (error.response) {
+        console.error(
+          '❌ Microsoft Error Detail:',
+          JSON.stringify(error.response.data),
+        );
+      }
+      if (error.response?.status === 401) {
         await this.handleTokenRevocation(userId, 'Microsoft_oauth2');
+      }
       throw error;
     }
   }

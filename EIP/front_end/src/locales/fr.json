@@ -107,11 +107,8 @@
     "notification": "Notifications",
     "ranking": "Classement",
     "friends": "Amis",
-    "friends": "Amis",
     "logout": "Déconnexion",
     "seeAll": "Voir toutes les notifications",
-    "organization": "Organisation",
-    "subscribe": "Prendre une souscription"
     "organization": "Organisation",
     "subscribe": "Prendre une souscription"
   },
@@ -235,9 +232,10 @@
     "passwordInvalid": "Le mot de passe ne respecte pas tous les critères.",
     "criteria": {
       "length": "Au moins 8 caractères",
-      "letter": "Contient une lettre",
+      "upper": "Contient une majuscule",
+      "lower": "Contient une minuscule",
       "number": "Contient un chiffre",
-      "special": "Contient un caractère spécial (@$!%*#?&)"
+      "special": "Contient un caractère spécial"
     },
     "resetYourPassword": "Réinitialiser votre mot de passe",
     "forgotPasswordInstructions": "Veuillez entrer votre adresse e-mail. Nous vous enverrons un lien pour réinitialiser votre mot de passe.",

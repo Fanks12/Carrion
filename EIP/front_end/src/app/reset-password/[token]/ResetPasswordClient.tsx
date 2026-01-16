@@ -43,7 +43,8 @@ export default function ResetPasswordClient() {
 
 	const [passwordCriteria, setPasswordCriteria] = useState({
 		length: false,
-		letter: false,
+		upper: false,
+		lower: false,
 		number: false,
 		special: false,
 	});
@@ -74,9 +75,10 @@ export default function ResetPasswordClient() {
 	const validatePassword = (pwd: string) => {
 		setPasswordCriteria({
 			length: pwd.length >= 8,
-			letter: /[A-Za-z]/.test(pwd),
+			upper: /[A-Z]/.test(pwd),
+			lower: /[a-z]/.test(pwd),
 			number: /\d/.test(pwd),
-			special: /[@$!%*#?&]/.test(pwd),
+			special: /.*[\W_]/.test(pwd),
 		});
 	};
 
@@ -231,7 +233,8 @@ export default function ResetPasswordClient() {
 
 								<ul className={styles.criteriaList}>
 									<ValidationCriterion isValid={passwordCriteria.length} text={t("auth.criteria.length") as string} />
-									<ValidationCriterion isValid={passwordCriteria.letter} text={t("auth.criteria.letter") as string} />
+									<ValidationCriterion isValid={passwordCriteria.upper} text={t("auth.criteria.upper") as string} />
+									<ValidationCriterion isValid={passwordCriteria.lower} text={t("auth.criteria.lower") as string} />
 									<ValidationCriterion isValid={passwordCriteria.number} text={t("auth.criteria.number") as string} />
 									<ValidationCriterion isValid={passwordCriteria.special} text={t("auth.criteria.special") as string} />
 								</ul>

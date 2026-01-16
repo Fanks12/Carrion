@@ -6,6 +6,7 @@ import {
   Param,
   Req,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { JwtAuthGuard } from '../auth/guards/jwt/jwt-auth.guard';
@@ -45,6 +46,23 @@ export class NotificationController {
   async markAsRead(@Param('id') id: string, @Req() req) {
     const userId = req.user.id;
     return this.notificationService.toggleReadStatus(id, userId);
+  }
+
+  @Put('readAll')
+  @ApiOperation({ summary: 'Toggle all notifications as read' })
+  @ApiResponse({
+    status: 200,
+    description: 'Succesfully toggled all notifications as read',
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Can't toggle all notifications as read",
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async markAllAsRead(@Req() req) {
+    const userId = req.user.id;
+    return this.notificationService.setAllNotificationAsRead(userId);
   }
 
   @Delete(':id')

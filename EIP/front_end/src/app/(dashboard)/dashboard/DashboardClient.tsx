@@ -77,8 +77,17 @@ export default function DashboardClient({
 		if (!selectedApplication) return;
 		try {
 			const updatedApp = await apiService.put<Application>(
-				`/job_applies/${selectedApplication.id}`,
-				selectedApplication
+				`/job_applies/${selectedApplication.id}/status`,
+				{
+					company: selectedApplication?.company,
+					contractType: selectedApplication?.contractType,
+					imageUrl: selectedApplication?.imageUrl,
+					interviewDate: selectedApplication?.interviewDate,
+					location: selectedApplication?.location,
+					salary: selectedApplication?.salary,
+					status: selectedApplication?.status,
+					title: selectedApplication?.title,
+				}
 			);
 			if (updatedApp) {
 				setApplications((prev) =>
