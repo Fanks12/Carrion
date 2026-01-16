@@ -6,6 +6,37 @@ button {
   cursor: pointer;
   font-weight: 500;
   margin-top: 0.5rem;
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  button {
+    padding: 0.35rem 0.7rem;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  button {
+    padding: 0.3rem 0.6rem;
+    font-size: 12px;
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  button {
+    padding: 0.25rem 0.5rem;
+    font-size: 11px;
+    margin-top: 0.4rem;
+  }
+}
+
+@media (max-width: 350px) {
+  button {
+    padding: 0.2rem 0.4rem;
+    font-size: 10px;
+  }
 }
 
 button:hover {

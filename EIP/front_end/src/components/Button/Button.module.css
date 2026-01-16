@@ -26,10 +26,66 @@
   font-size: 8px;
 }
 
+@media (max-width: 992px) {
+  .small {
+    font-size: 8px;
+    padding: 7px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .small {
+    font-size: 7px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .small {
+    font-size: 7px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  .small {
+    font-size: 6px;
+    padding: 5px 8px;
+  }
+}
+
 .medium {
   padding: 12px 18px;
   font-size: 14px;
   max-height: 32px;
+}
+
+@media (max-width: 992px) {
+  .medium {
+    font-size: 13px;
+    padding: 11px 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .medium {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .medium {
+    font-size: 11px;
+    padding: 9px 14px;
+  }
+}
+
+@media (max-width: 350px) {
+  .medium {
+    font-size: 10px;
+    padding: 8px 12px;
+  }
 }
 
 .large {
@@ -39,33 +95,65 @@
   min-width: 200px;
 }
 
+@media (max-width: 992px) {
+  .large {
+    font-size: 15px;
+    padding: 12px 22px;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .large {
+    font-size: 14px;
+    padding: 12px 20px;
+    min-width: 160px;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .large {
+    font-size: 13px;
+    padding: 11px 18px;
+    min-width: 140px;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 350px) {
+  .large {
+    font-size: 12px;
+    padding: 10px 16px;
+    min-width: 120px;
+    max-width: 160px;
+  }
+}
+
+@media (max-width: 992px) {
+  .primaryButton {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .primaryButton {
     font-size: 14px;
     padding: 8px 16px;
   }
+}
 
-  .small {
-    font-size: 7px;
-    padding: 6px 12px;
-  }
-
-  .medium {
+@media (max-width: 576px) {
+  .primaryButton {
     font-size: 12px;
-    padding: 10px 16px;
-  }
-
-  .large {
-    font-size: 14px;
-    padding: 12px 20px;
-    min-width: 200px;
-    max-width: 200px;
+    padding: 7px 14px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 350px) {
   .primaryButton {
-    font-size: 12px;
-    padding: 8px 14px;
+    font-size: 11px;
+    padding: 6px 12px;
   }
 }
