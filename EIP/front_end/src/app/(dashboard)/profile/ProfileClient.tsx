@@ -37,7 +37,7 @@ interface FlatProfile extends ProfileDetails {
 
 type ProfileInput = UserProfile | FlatProfile;
 
-type FormUserProfile = Omit<UserProfile, 'userProfile'> & {
+type FormUserProfile = Omit<UserProfile, 'userProfile' | 'subscription'> & {
 	userProfile: Omit<UserProfile['userProfile'], 'birthDate'> & {
 		birthDate?: Date | null;
 	};
