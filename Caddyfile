@@ -1,4 +1,4 @@
-zhg-villon.fr {
+carrion.website {
     handle /api/* {
         reverse_proxy server:8080
     }
@@ -10,6 +10,6 @@ zhg-villon.fr {
     }
 }
 
-www.zhg-villon.fr {
-    redir https://zhg-villon.fr{uri}
+www.carrion.website {
+    redir https://carrion.website{uri}
 }
