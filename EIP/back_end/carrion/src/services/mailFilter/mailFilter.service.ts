@@ -545,7 +545,9 @@ If validation fails → return null
 - DO NOT hallucinate data  
 - ALWAYS prefer null if uncertain
 - RESPECT exactly the requested JSON format
-- INCLUDE JSON quotes and commas`;
+- INCLUDE JSON quotes and commas
+- WHEN IN DOUBT, RETURN NULL
+- WHEN I SAY NULL ITS NULL, NOT IN A STRING FORMAT`;
 
     if (isComplex) {
       return (
