@@ -36,12 +36,29 @@ export default function SubscriptionClient() {
 
 
 	const setCurrentPlan = () => {
-		if (userProfile?.subscription?.status === "ACTIVE") {
-			return "PRO";
-		} else {
+		const sub = userProfile?.subscription;
+
+		if (!sub) return "FREE";
+
+		if (sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < new Date()) {
 			return "FREE";
 		}
+
+		if (sub.status === "ACTIVE") {
+			return "PRO";
+		}
+
+		return "FREE";
 	}
+
+	const formatDate = (dateString: string | null | undefined) => {
+		if (!dateString) return "";
+		return new Date(dateString).toLocaleDateString("fr-FR", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
+	};
 
 	const currentPlan: PlanType = setCurrentPlan();
 
@@ -70,6 +87,23 @@ export default function SubscriptionClient() {
 			"mailto:contact@carrion.com?subject=Demande%20Enterprise";
 	};
 
+	const handleManageSubscription = async () => {
+		setLoading(true);
+		try {
+			const response = await apiService.post<{ url: string }>(
+				"/subscription/create-portal-session",
+				{}
+			);
+			if (response?.url) {
+				window.location.href = response.url;
+			}
+		} catch {
+			toast.error("Erreur lors de l'ouverture du portail");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const renderCard = (plan: PlanType) => {
 		const isCurrentPlan = currentPlan === plan;
 		const isPro = plan === "PRO";
@@ -91,6 +125,14 @@ export default function SubscriptionClient() {
 					<h3 className={styles.planName}>
 						{t(`subscription.plans.${plan.toLowerCase()}.name`)}
 					</h3>
+					{isCurrentPlan && isPro && userProfile?.subscription?.currentPeriodEnd && (
+						<p style={{ fontSize: '0.85rem', color: '#666', marginTop: '4px' }}>
+							{userProfile.subscription.status === 'ACTIVE'
+								? `Renouvellement le ${formatDate(userProfile.subscription.currentPeriodEnd)}`
+								: `Expire le ${formatDate(userProfile.subscription.currentPeriodEnd)}`
+							}
+						</p>
+					)}
 					<div className={styles.priceContainer}>
 						{isEnterprise ? (
 							<span className={styles.price}>
@@ -146,11 +188,17 @@ export default function SubscriptionClient() {
 					) : (
 						<button
 							className={isPro ? styles.buttonPrimary : styles.buttonOutline}
-							onClick={isPro && !isCurrentPlan ? handleSubscribe : undefined}
-							disabled={isCurrentPlan || (isPro && loading)}
+							onClick={() => {
+								if (isPro && isCurrentPlan) {
+									handleManageSubscription();
+								} else if (isPro && !isCurrentPlan) {
+									handleSubscribe();
+								}
+							}}
+							disabled={(isCurrentPlan && isFree) || loading}
 						>
 							{isCurrentPlan
-								? t("subscription.active")
+								? (isPro ? t("subscription.manage") : t("subscription.active"))
 								: isPro
 									? loading
 										? t("subscription.processing")

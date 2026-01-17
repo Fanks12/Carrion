@@ -89,6 +89,7 @@ export class UserService {
         subscription: {
           select: {
             status: true,
+            currentPeriodEnd: true,
           },
         },
         userProfile: {

@@ -24,6 +24,7 @@ export interface UserProfile {
   };
   subscription: {
     status: string;
+    currentPeriodEnd: string;
   };
   tokens: {
     name: string;

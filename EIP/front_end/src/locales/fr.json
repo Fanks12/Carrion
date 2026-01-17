@@ -58,7 +58,6 @@
       "accepted": "Acceptées",
       "rejected": "Refusées",
       "interview_scheduled": "Entretien",
-      "interview_scheduled": "Entretien",
       "archived": "Archivées"
     },
     "stats": {
@@ -364,7 +363,6 @@
       "ACCEPTED": "Acceptée",
       "REJECTED": "Refusée",
       "INTERVIEW_SCHEDULED": "Entretien",
-      "INTERVIEW_SCHEDULED": "Entretien",
       "INTERVIEW": "Entretien",
       "REJECTED_BY_COMPANY": "Refusée",
       "ON": "Acceptée",
@@ -508,7 +506,6 @@
 
   "notifications": {
     "title": "Notifications",
-    "default": "Une nouvelle notification est disponible",
     "default": "Une nouvelle notification est disponible",
     "loading": "Chargement des notifications...",
     "application": {
@@ -669,17 +666,7 @@
       "noFriends": "Vous n'avez pas encore d'amis. Ajoutez-en depuis le classement principal !",
       "noFriendsData": "Aucun de vos amis n'a encore de candidatures."
     },
-    "search": {
-      "placeholder": "Rechercher par nom ou email...",
-      "results": "Résultats de recherche"
-    },
-    "friends": {
-      "add": "Ajouter",
-      "remove": "Retirer",
-      "title": "Mes amis",
-      "noFriends": "Vous n'avez pas encore d'amis. Ajoutez-en depuis le classement principal !",
-      "noFriendsData": "Aucun de vos amis n'a encore de candidatures."
-    },
+
     "pagination": {
       "previous": "Précédent",
       "next": "Suivant",
@@ -962,6 +949,7 @@
     "contactUs": "Nous contacter",
     "processing": "Chargement...",
     "condition": "* Nécessite de lier un compte Google (Gmail) ou Microsoft (Outlook).",
+    "manage": "Gérer mon abonnement",
     "plans": {
       "free": {
         "name": "Gratuit",

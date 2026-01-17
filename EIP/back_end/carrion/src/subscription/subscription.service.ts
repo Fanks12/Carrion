@@ -118,6 +118,11 @@ export class SubscriptionService {
           const subDeleted = event.data.object as Stripe.Subscription;
           await this.handleSubscriptionDeleted(subDeleted);
           break;
+        case 'customer.deleted':
+          const customerDeleted = event.data
+            .object as unknown as Stripe.DeletedCustomer;
+          await this.handleCustomerDeleted(customerDeleted);
+          break;
       }
     } catch (error) {
       this.logger.error('Error handling webhook:', error);
@@ -155,6 +160,7 @@ export class SubscriptionService {
 
   private async handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     const customerId = subscription.customer as string;
+
     const subRecord = await this.prisma.subscription.findUnique({
       where: { stripeCustomerId: customerId },
     });
@@ -168,6 +174,9 @@ export class SubscriptionService {
           currentPeriodEnd: null,
         },
       });
+      this.logger.log(
+        `Subscription deleted for user ${subRecord.userId}, but CustomerID kept.`,
+      );
     }
   }
 
@@ -187,13 +196,28 @@ export class SubscriptionService {
     };
 
     const prismaStatus = statusMap[stripeSubscription.status] || 'INACTIVE';
-    const stripePeriodEnd = (stripeSubscription as any).current_period_end;
+    let stripePeriodEnd = (stripeSubscription as any).current_period_end;
+
+    if (
+      !stripePeriodEnd &&
+      stripeSubscription.items?.data?.[0]?.current_period_end
+    ) {
+      stripePeriodEnd = stripeSubscription.items.data[0].current_period_end;
+    }
+
+    if (!stripePeriodEnd) {
+      this.logger.error(
+        `Didn't find a period end for subscription ${stripeSubscription.id}`,
+      );
+    }
+
+    this.logger.log(`🔍 DEBUG FINAL - Date trouvée : ${stripePeriodEnd}`);
+
     await this.prisma.subscription.update({
       where: { userId },
       data: {
         stripeSubscriptionId: stripeSubscription.id,
         status: prismaStatus,
-
         currentPeriodEnd: stripePeriodEnd
           ? new Date(stripePeriodEnd * 1000)
           : null,
@@ -201,7 +225,7 @@ export class SubscriptionService {
     });
 
     this.logger.log(
-      `Updated subscription for user ${userId} to ${prismaStatus}`,
+      `Updated subscription. Status: ${prismaStatus}, EndDate: ${stripePeriodEnd ? new Date(stripePeriodEnd * 1000).toISOString() : 'NULL'}`,
     );
   }
 
@@ -215,5 +239,50 @@ export class SubscriptionService {
       hasSubscription: subscription?.status === 'ACTIVE',
       currentPeriodEnd: subscription?.currentPeriodEnd,
     };
+  }
+
+  async createPortalSession(userId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+    });
+
+    if (!subscription || !subscription.stripeCustomerId) {
+      throw new InternalServerErrorException(
+        'Aucun abonnement trouvé pour cet utilisateur',
+      );
+    }
+
+    const frontendUrl = this.configService.get<string>('FRONT');
+    const stripe = this.getStripe();
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: subscription.stripeCustomerId,
+      return_url: `${frontendUrl}/subscription`,
+    });
+
+    return { url: session.url };
+  }
+
+  private async handleCustomerDeleted(customer: Stripe.DeletedCustomer) {
+    const customerId = customer.id;
+
+    const subRecord = await this.prisma.subscription.findUnique({
+      where: { stripeCustomerId: customerId },
+    });
+
+    if (subRecord) {
+      await this.prisma.subscription.update({
+        where: { id: subRecord.id },
+        data: {
+          status: 'INACTIVE',
+          stripeSubscriptionId: null,
+          currentPeriodEnd: null,
+          stripeCustomerId: null,
+        },
+      });
+      this.logger.log(
+        `Customer deleted for user ${subRecord.userId}. Full reset.`,
+      );
+    }
   }
 }
