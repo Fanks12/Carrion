@@ -10,6 +10,7 @@ import {
   IsUUID,
   IsNumber,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class JobApplyDto {
   @IsUUID()
@@ -137,9 +138,9 @@ export class UpdateJobApplyDto {
     type: Date,
     example: '2025-06-09 09:08:22',
   })
+  @Type(() => Date)
   @IsOptional()
   @IsDate()
-  @MaxLength(255)
   interviewDate?: Date;
 }
 
