@@ -937,23 +937,51 @@
       "autoDesc": "Link your mailbox. We detect and add your applications automatically.",
       "goToProfileBtn": "Configure in my Profile",
       "manualBtn": "I prefer manual entry",
-      "profileNote": "Info: You can change your mind at any time."
+      "profileNote": "Info: You can change your mind at any time.",
+      "autoBadge": "Recommended"
     }
   },
   "subscription": {
-    "title": "Premium Subscription",
-    "subtitle": "Upgrade to Premium and enjoy exclusive features",
-    "subscribe": "Subscribe",
+    "pageTitle": "Choose your plan",
+    "pageSubtitle": "Start for free and upgrade when you're ready to remove limits.",
+    "currentPlan": "Current Plan",
+    "month": "month",
+    "active": "Active",
+    "upgrade": "Go Unlimited",
+    "included": "Included",
+    "contactUs": "Contact Us",
     "processing": "Processing...",
-    "features": {
-      "feature1": "Unlimited access to all features",
-      "feature2": "Priority support",
-      "feature3": "Advanced statistics",
-      "feature4": "Unlimited data export"
+    "condition": "* Requires linking a Google (Gmail) or Microsoft (Outlook) account.",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "To discover the platform.",
+        "feature1": "Auto-tracking: 5 apps *",
+        "feature2": "Unlimited manual tracking",
+        "feature3": "Dashboard access",
+        "feature4": "Secure data"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "To remove all limits.",
+        "feature1": "Auto-tracking: Unlimited *",
+        "feature2": "Unlimited manual tracking",
+        "feature3": "Support the project ❤️",
+        "feature4": "Future updates included"
+      },
+      "enterprise": {
+        "name": "Organization",
+        "price": "Custom",
+        "description": "For schools and agencies.",
+        "feature1": "Multi-account management",
+        "feature2": "Admin dashboard",
+        "feature3": "Student/Team tracking",
+        "feature4": "Dedicated support"
+      }
     },
     "errors": {
-      "createSession": "Error creating payment session",
-      "generic": "An error occurred. Please try again."
+      "createSession": "Unable to create payment session.",
+      "generic": "An error occurred."
     }
   },
 
@@ -963,5 +991,56 @@
     "backHome": "Back to Home",
     "errorCode": "Error 404",
     "button": "Home"
+  },
+
+  "infosModal": {
+    "title": "Complete your profile",
+    "step1": {
+      "lastName": "Last Name",
+      "firstName": "First Name",
+      "birthDate": "Date of Birth",
+      "city": "City",
+      "searchCityPlaceholder": "Search for a city...",
+      "searching": "Searching...",
+      "noCityFound": "No city found",
+      "school": "University",
+      "phone": "Phone Number"
+    },
+    "step2": {
+      "contractType": "Contract Type",
+      "selectPlaceholder": "Select...",
+      "sector": "Sector",
+      "sectorPlaceholder": "Select one or more sectors...",
+      "locations": "Desired Locations",
+      "goalQuestion": "What is your main goal?",
+      "goals": {
+        "centralisation": "Centralizing applications",
+        "automatisation": "Automated tracking",
+        "documents": "Document storage"
+      }
+    },
+    "step3": {
+      "addCv": "Upload your Resume here:",
+      "viewCvTooltip": "Click to view Resume",
+      "uploadCvTooltip": "Click to add a Resume",
+      "deleteCv": "Remove my Resume",
+      "linkedin": "LinkedIn",
+      "portfolio": "Portfolio",
+      "description": "Short description about yourself"
+    },
+    "buttons": {
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Submit Information"
+    },
+    "toasts": {
+      "successFull": "Profile and Resume saved successfully!",
+      "successProfile": "Profile saved successfully!",
+      "errorSign": "Failed to generate signed URL",
+      "errorS3": "Failed to upload Resume to S3",
+      "errorSave": "Save error: creating profile",
+      "errorSubmit": "An error occurred during submission.",
+      "errorUnknown": "An unknown error occurred."
+    }
   }
 }

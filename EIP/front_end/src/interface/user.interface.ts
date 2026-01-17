@@ -22,6 +22,9 @@ export interface UserProfile {
     sector: string[];
     resume: string;
   };
+  subscription: {
+    status: string;
+  };
   tokens: {
     name: string;
   }[];

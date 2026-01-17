@@ -295,12 +295,12 @@ export class AuthService {
       sendSmtpEmail.subject = 'Réinitialisation de mot de passe - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-      <h2 style="color: #0c1f3d;">Demande de réinitialisation</h2>
-      <p>Bonjour,</p>
-      <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez ci-dessous pour continuer :</p>
-      <p>${resetUrl}</p>
-      <p style="font-size: 12px; color: #666;">Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
-      </div>`;
+			<h2 style="color: #0c1f3d;">Password Reset Request</h2>
+			<p>Hello,</p>
+			<p>You requested a password reset. Click below to continue:</p>
+			<p>${resetUrl}</p>
+			<p style="font-size: 12px; color: #666;">If you did not request this, please ignore this email.</p>
+			</div>`;
       sendSmtpEmail.sender = {
         name: 'Carrion',
         email: process.env.SENDER_EMAIL || 'no-reply@carrion.app',
@@ -473,12 +473,12 @@ export class AuthService {
       sendSmtpEmail.subject = 'Vérifiez votre adresse email - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-      <h2 style="color: #0c1f3d;">Bienvenue sur Carrion !</h2>
-      <p>Bonjour ${username},</p>
-      <p>Pour activer votre compte, veuillez confirmer votre email :</p>
-      <p>${verifyUrl}</p>
-      <p style="font-size: 12px; color: #666;">Lien valide 24h.</p>
-      </div>`;
+				<h2 style="color: #0c1f3d;">Welcome to Carrion!</h2>
+				<p>Hello ${username},</p>
+				<p>To activate your account, please confirm your email:</p>
+				<p>${verifyUrl}</p>
+				<p style="font-size: 12px; color: #666;">Link valid for 24 hours.</p>
+			</div>`;
       sendSmtpEmail.sender = {
         name: 'Carrion',
         email: process.env.SENDER_EMAIL || 'no-reply@carrion.app',

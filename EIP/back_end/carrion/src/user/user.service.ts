@@ -86,6 +86,11 @@ export class UserService {
             name: true,
           },
         },
+        subscription: {
+          select: {
+            status: true,
+          },
+        },
         userProfile: {
           select: {
             firstName: true,
