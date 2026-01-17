@@ -56,7 +56,16 @@ export default function ArchivesClient({
 		try {
 			const updatedApp = await apiService.put<Application>(
 				`/job_applies/${selectedApplication.id}/archived-status`,
-				selectedApplication
+				{
+					company: selectedApplication?.company,
+					contractType: selectedApplication?.contractType,
+					imageUrl: selectedApplication?.imageUrl,
+					interviewDate: selectedApplication?.interviewDate,
+					location: selectedApplication?.location,
+					salary: selectedApplication?.salary,
+					status: selectedApplication?.status,
+					title: selectedApplication?.title,
+				}
 			);
 			setApplications((prev) =>
 				prev.map((app) => (app.id === updatedApp!.id ? updatedApp! : app))

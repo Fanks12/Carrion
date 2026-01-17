@@ -313,6 +313,7 @@ function LeaderboardContent({
 											width={80}
 											height={80}
 											className={styles.roundedFull}
+											unoptimized
 										/>
 									</div>
 									<h3>
@@ -340,6 +341,7 @@ function LeaderboardContent({
 											width={100}
 											height={100}
 											className={styles.roundedFull}
+											unoptimized
 										/>
 									</div>
 									<h3>
@@ -367,6 +369,7 @@ function LeaderboardContent({
 											width={80}
 											height={80}
 											className={styles.roundedFull}
+											unoptimized
 										/>
 									</div>
 									<h3>
@@ -451,6 +454,7 @@ function LeaderboardContent({
 										width={40}
 										height={40}
 										className={styles.roundedFull}
+										unoptimized
 									/>
 								</div>
 								<div className={styles.rankingUserInfo}>

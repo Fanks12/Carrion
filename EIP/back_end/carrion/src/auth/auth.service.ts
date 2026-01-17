@@ -295,12 +295,12 @@ export class AuthService {
       sendSmtpEmail.subject = 'Réinitialisation de mot de passe - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-      <h2 style="color: #0c1f3d;">Demande de réinitialisation</h2>
-      <p>Bonjour,</p>
-      <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez ci-dessous pour continuer :</p>
-      <p>${resetUrl}</p>
-      <p style="font-size: 12px; color: #666;">Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
-      </div>`;
+			<h2 style="color: #0c1f3d;">Password Reset Request</h2>
+			<p>Hello,</p>
+			<p>You requested a password reset. Click below to continue:</p>
+			<p>${resetUrl}</p>
+			<p style="font-size: 12px; color: #666;">If you did not request this, please ignore this email.</p>
+			</div>`;
       sendSmtpEmail.sender = {
         name: 'Carrion',
         email: process.env.SENDER_EMAIL || 'no-reply@carrion.app',
@@ -360,7 +360,7 @@ export class AuthService {
       name === 'Microsoft_oauth2'
         ? this.calculateTokenExpiration(90)
         : new Date('9999-12-31T23:59:59Z');
-    await this.prisma.token.upsert({
+    const prismaAnswer = await this.prisma.token.upsert({
       where: { name_providerId: { name, providerId } },
       update: {
         accessToken,
@@ -380,6 +380,8 @@ export class AuthService {
         tokenTimeValidity: refreshTokenExpires,
       },
     });
+    console.log('token créée ?');
+    console.log(prismaAnswer);
   }
 
   async validateUser(
@@ -471,12 +473,12 @@ export class AuthService {
       sendSmtpEmail.subject = 'Vérifiez votre adresse email - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-      <h2 style="color: #0c1f3d;">Bienvenue sur Carrion !</h2>
-      <p>Bonjour ${username},</p>
-      <p>Pour activer votre compte, veuillez confirmer votre email :</p>
-      <p>${verifyUrl}</p>
-      <p style="font-size: 12px; color: #666;">Lien valide 24h.</p>
-      </div>`;
+				<h2 style="color: #0c1f3d;">Welcome to Carrion!</h2>
+				<p>Hello ${username},</p>
+				<p>To activate your account, please confirm your email:</p>
+				<p>${verifyUrl}</p>
+				<p style="font-size: 12px; color: #666;">Link valid for 24 hours.</p>
+			</div>`;
       sendSmtpEmail.sender = {
         name: 'Carrion',
         email: process.env.SENDER_EMAIL || 'no-reply@carrion.app',
@@ -612,7 +614,7 @@ export class AuthService {
     userId: string,
   ): Promise<string | void> {
     const webhookUrl = `${process.env.BACK}/webhook/outlook`;
-    const expirationDateTime = new Date(Date.now() + 4230 * 60 * 1000);
+    const expirationDateTime = new Date(Date.now() + 4000 * 60 * 1000);
     try {
       const response = await firstValueFrom(
         this.httpService.post(
@@ -620,7 +622,7 @@ export class AuthService {
           {
             changeType: 'created',
             notificationUrl: webhookUrl,
-            resource: "me/mailFolders('inbox')/messages",
+            resource: "me/mailFolders('Inbox')/messages",
             expirationDateTime: expirationDateTime.toISOString(),
             clientState: `${userId}-outlook`,
           },
@@ -635,8 +637,15 @@ export class AuthService {
       });
       return subscriptionId;
     } catch (error) {
-      if (error.response?.status >= 400 && error.response?.status < 500)
+      if (error.response) {
+        console.error(
+          '❌ Microsoft Error Detail:',
+          JSON.stringify(error.response.data),
+        );
+      }
+      if (error.response?.status === 401) {
         await this.handleTokenRevocation(userId, 'Microsoft_oauth2');
+      }
       throw error;
     }
   }

@@ -2,14 +2,11 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import Stripe from 'stripe';
 import { ConfigService } from '@nestjs/config';
-
-// Alias pour éviter le conflit avec le type Prisma Subscription
-type StripeSubscriptionType = Stripe.Subscription;
+import { SubscriptionStatus } from '@prisma/client';
 
 @Injectable()
 export class SubscriptionService {
@@ -23,10 +20,13 @@ export class SubscriptionService {
 
   private getStripe(): Stripe {
     if (!this.stripe) {
-      const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
+      const stripeSecretKey =
+        this.configService.get<string>('STRIPE_SECRET_KEY');
       if (!stripeSecretKey) {
         this.logger.error('STRIPE_SECRET_KEY is not configured');
-        throw new InternalServerErrorException('Stripe configuration is missing');
+        throw new InternalServerErrorException(
+          'Stripe configuration is missing',
+        );
       }
       this.stripe = new Stripe(stripeSecretKey);
     }
@@ -35,12 +35,10 @@ export class SubscriptionService {
 
   async createCheckoutSession(userId: string, userEmail: string) {
     try {
-      // Vérifier si l'utilisateur a déjà une souscription
       let subscription = await this.prisma.subscription.findUnique({
         where: { userId },
       });
 
-      // Si pas de souscription, en créer une
       if (!subscription) {
         subscription = await this.prisma.subscription.create({
           data: {
@@ -50,28 +48,23 @@ export class SubscriptionService {
         });
       }
 
-      // Créer ou récupérer le customer Stripe
       let customerId = subscription.stripeCustomerId;
       const stripe = this.getStripe();
 
       if (!customerId) {
         const customer = await stripe.customers.create({
           email: userEmail,
-          metadata: {
-            userId: userId,
-          },
+          metadata: { userId },
         });
 
         customerId = customer.id;
 
-        // Mettre à jour la souscription avec le customer ID
         await this.prisma.subscription.update({
           where: { id: subscription.id },
           data: { stripeCustomerId: customerId },
         });
       }
 
-      // Créer la session Checkout
       const frontendUrl = this.configService.get<string>('FRONT');
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
@@ -83,20 +76,20 @@ export class SubscriptionService {
               currency: 'eur',
               product_data: {
                 name: 'Carrion Premium',
-                description: 'Accès premium à toutes les fonctionnalités de Carrion',
+                description: 'Accès premium complet',
               },
-              recurring: {
-                interval: 'month',
-              },
-              unit_amount: 999, // 9.99 EUR en centimes
+              recurring: { interval: 'month' },
+              unit_amount: 399,
             },
             quantity: 1,
           },
         ],
-        success_url: `${frontendUrl}/?subscription=success`,
-        cancel_url: `${frontendUrl}/?subscription=cancelled`,
-        metadata: {
-          userId: userId,
+        success_url: `${frontendUrl}/subscription?success=true`,
+        cancel_url: `${frontendUrl}/subscription?canceled=true`,
+        metadata: { userId },
+
+        subscription_data: {
+          metadata: { userId },
         },
       });
 
@@ -112,24 +105,24 @@ export class SubscriptionService {
   async handleWebhook(event: Stripe.Event) {
     try {
       switch (event.type) {
-        case 'checkout.session.completed': {
+        case 'checkout.session.completed':
           const session = event.data.object as Stripe.Checkout.Session;
           await this.handleCheckoutCompleted(session);
           break;
-        }
         case 'customer.subscription.created':
-        case 'customer.subscription.updated': {
-          const subscription = event.data.object as Stripe.Subscription;
-          await this.handleSubscriptionUpdate(subscription);
+        case 'customer.subscription.updated':
+          const sub = event.data.object as Stripe.Subscription;
+          await this.handleSubscriptionUpdate(sub);
           break;
-        }
-        case 'customer.subscription.deleted': {
-          const subscription = event.data.object as Stripe.Subscription;
-          await this.handleSubscriptionDeleted(subscription);
+        case 'customer.subscription.deleted':
+          const subDeleted = event.data.object as Stripe.Subscription;
+          await this.handleSubscriptionDeleted(subDeleted);
           break;
-        }
-        default:
-          this.logger.log(`Unhandled event type: ${event.type}`);
+        case 'customer.deleted':
+          const customerDeleted = event.data
+            .object as unknown as Stripe.DeletedCustomer;
+          await this.handleCustomerDeleted(customerDeleted);
+          break;
       }
     } catch (error) {
       this.logger.error('Error handling webhook:', error);
@@ -139,100 +132,101 @@ export class SubscriptionService {
 
   private async handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const userId = session.metadata?.userId;
-    if (!userId) {
-      this.logger.warn('No userId in checkout session metadata');
-      return;
-    }
-
     const subscriptionId = session.subscription as string;
-    if (!subscriptionId) {
-      this.logger.warn('No subscription ID in checkout session');
-      return;
+
+    if (userId && subscriptionId) {
+      const stripe = this.getStripe();
+      const stripeSubscription =
+        await stripe.subscriptions.retrieve(subscriptionId);
+      await this.updateSubscriptionFromStripe(userId, stripeSubscription);
     }
-
-    // Récupérer la souscription Stripe pour obtenir les détails
-    const stripe = this.getStripe();
-    const stripeSubscription = await stripe.subscriptions.retrieve(
-      subscriptionId,
-    );
-
-    await this.updateSubscriptionFromStripe(userId, stripeSubscription);
   }
 
-  private async handleSubscriptionUpdate(
-    subscription: StripeSubscriptionType,
-  ) {
+  private async handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+    let userId = subscription.metadata?.userId;
+
+    if (!userId) {
+      const customerId = subscription.customer as string;
+      const subRecord = await this.prisma.subscription.findUnique({
+        where: { stripeCustomerId: customerId },
+      });
+      if (subRecord) userId = subRecord.userId;
+    }
+
+    if (userId) {
+      await this.updateSubscriptionFromStripe(userId, subscription);
+    }
+  }
+
+  private async handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     const customerId = subscription.customer as string;
-    const subscriptionRecord = await this.prisma.subscription.findUnique({
+
+    const subRecord = await this.prisma.subscription.findUnique({
       where: { stripeCustomerId: customerId },
     });
 
-    if (!subscriptionRecord) {
-      this.logger.warn(
-        `No subscription found for customer: ${customerId}`,
+    if (subRecord) {
+      await this.prisma.subscription.update({
+        where: { id: subRecord.id },
+        data: {
+          status: 'CANCELED',
+          stripeSubscriptionId: null,
+          currentPeriodEnd: null,
+        },
+      });
+      this.logger.log(
+        `Subscription deleted for user ${subRecord.userId}, but CustomerID kept.`,
       );
-      return;
     }
-
-    await this.updateSubscriptionFromStripe(
-      subscriptionRecord.userId,
-      subscription,
-    );
-  }
-
-  private async handleSubscriptionDeleted(
-    subscription: Stripe.Subscription,
-  ) {
-    const customerId = subscription.customer as string;
-    const subscriptionRecord = await this.prisma.subscription.findUnique({
-      where: { stripeCustomerId: customerId },
-    });
-
-    if (!subscriptionRecord) {
-      this.logger.warn(
-        `No subscription found for customer: ${customerId}`,
-      );
-      return;
-    }
-
-    await this.prisma.subscription.update({
-      where: { id: subscriptionRecord.id },
-      data: {
-        status: 'CANCELED',
-        stripeSubscriptionId: null,
-        currentPeriodEnd: null,
-      },
-    });
   }
 
   private async updateSubscriptionFromStripe(
     userId: string,
-    stripeSubscription: StripeSubscriptionType,
+    stripeSubscription: Stripe.Subscription,
   ) {
-    const statusMap: Record<string, string> = {
+    const statusMap: Record<string, SubscriptionStatus> = {
       active: 'ACTIVE',
-      canceled: 'CANCELED',
-      past_due: 'PAST_DUE',
-      unpaid: 'INACTIVE',
       trialing: 'ACTIVE',
+      past_due: 'PAST_DUE',
+      canceled: 'CANCELED',
+      unpaid: 'INACTIVE',
+      incomplete: 'INACTIVE',
+      incomplete_expired: 'INACTIVE',
+      paused: 'INACTIVE',
     };
 
-    const status =
-      statusMap[stripeSubscription.status] || 'INACTIVE';
+    const prismaStatus = statusMap[stripeSubscription.status] || 'INACTIVE';
+    let stripePeriodEnd = (stripeSubscription as any).current_period_end;
 
-    // Accès direct aux propriétés Stripe via indexation pour éviter le conflit de types
-    const periodEnd = (stripeSubscription as any).current_period_end as number | null;
+    if (
+      !stripePeriodEnd &&
+      stripeSubscription.items?.data?.[0]?.current_period_end
+    ) {
+      stripePeriodEnd = stripeSubscription.items.data[0].current_period_end;
+    }
+
+    if (!stripePeriodEnd) {
+      this.logger.error(
+        `Didn't find a period end for subscription ${stripeSubscription.id}`,
+      );
+    }
+
+    this.logger.log(`🔍 DEBUG FINAL - Date trouvée : ${stripePeriodEnd}`);
 
     await this.prisma.subscription.update({
       where: { userId },
       data: {
         stripeSubscriptionId: stripeSubscription.id,
-        status: status as any,
-        currentPeriodEnd: periodEnd
-          ? new Date(periodEnd * 1000)
+        status: prismaStatus,
+        currentPeriodEnd: stripePeriodEnd
+          ? new Date(stripePeriodEnd * 1000)
           : null,
       },
     });
+
+    this.logger.log(
+      `Updated subscription. Status: ${prismaStatus}, EndDate: ${stripePeriodEnd ? new Date(stripePeriodEnd * 1000).toISOString() : 'NULL'}`,
+    );
   }
 
   async getSubscriptionStatus(userId: string) {
@@ -240,15 +234,55 @@ export class SubscriptionService {
       where: { userId },
     });
 
-    if (!subscription) {
-      return { status: 'INACTIVE', hasSubscription: false };
-    }
-
     return {
-      status: subscription.status,
-      hasSubscription: subscription.status === 'ACTIVE',
-      currentPeriodEnd: subscription.currentPeriodEnd,
+      status: subscription?.status || 'INACTIVE',
+      hasSubscription: subscription?.status === 'ACTIVE',
+      currentPeriodEnd: subscription?.currentPeriodEnd,
     };
   }
-}
 
+  async createPortalSession(userId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+    });
+
+    if (!subscription || !subscription.stripeCustomerId) {
+      throw new InternalServerErrorException(
+        'Aucun abonnement trouvé pour cet utilisateur',
+      );
+    }
+
+    const frontendUrl = this.configService.get<string>('FRONT');
+    const stripe = this.getStripe();
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: subscription.stripeCustomerId,
+      return_url: `${frontendUrl}/subscription`,
+    });
+
+    return { url: session.url };
+  }
+
+  private async handleCustomerDeleted(customer: Stripe.DeletedCustomer) {
+    const customerId = customer.id;
+
+    const subRecord = await this.prisma.subscription.findUnique({
+      where: { stripeCustomerId: customerId },
+    });
+
+    if (subRecord) {
+      await this.prisma.subscription.update({
+        where: { id: subRecord.id },
+        data: {
+          status: 'INACTIVE',
+          stripeSubscriptionId: null,
+          currentPeriodEnd: null,
+          stripeCustomerId: null,
+        },
+      });
+      this.logger.log(
+        `Customer deleted for user ${subRecord.userId}. Full reset.`,
+      );
+    }
+  }
+}

@@ -121,11 +121,11 @@ export class OrganizationService {
       sendSmtpEmail.subject = `Invitation à rejoindre ${organization.name} sur Carrion`;
       sendSmtpEmail.htmlContent = `
 			<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-			<h2 style="color: #0c1f3d;">Vous êtes invité !</h2>
-			<p>Bonjour,</p>
-			<p><strong>${inviterName}</strong> vous a invité à rejoindre l'organisation <strong>${organization.name}</strong> en tant que <strong>${body.role}</strong>.</p>
-			<p>${invitationUrl}</p>
-			<p style="font-size: 12px; color: #666;">Ce lien est valide 7 jours.</p>
+				<h2 style="color: #0c1f3d;">You have been invited!</h2>
+				<p>Hello,</p>
+				<p><strong>${inviterName}</strong> invited you to join the organization <strong>${organization.name}</strong> as a <strong>${body.role}</strong>.</p>
+				<p>${invitationUrl}</p>
+				<p style="font-size: 12px; color: #666;">This link is valid for 7 days.</p>
 			</div>`;
       sendSmtpEmail.sender = {
         name: 'Carrion',

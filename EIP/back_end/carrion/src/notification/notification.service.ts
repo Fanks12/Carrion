@@ -2,13 +2,14 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { NotificationContent } from '@/interface/notification.interface';
 import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class NotificationService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getUserNotifications(userId: string) {
     const notifications = await this.prisma.notification.findMany({
@@ -43,6 +44,25 @@ export class NotificationService {
       where: { id: notification.id },
       data: { read: !notification.read },
     });
+  }
+
+  async setAllNotificationAsRead(userId: string) {
+    try {
+      await this.prisma.notification.updateMany({
+        where: {
+          userId,
+          read: false,
+        },
+        data: {
+          read: true,
+        },
+      });
+      return { statusCode: 200, message: 'All notifications set as read' };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Can't set all notification as read",
+      );
+    }
   }
 
   async deleteNotification(notificationId: string, userId: string) {

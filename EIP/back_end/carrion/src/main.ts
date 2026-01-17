@@ -25,7 +25,7 @@ async function bootstrap() {
 
   // Configure body parser to preserve raw body for Stripe webhooks
   app.use(
-    '/subscription/webhook',
+    '/api/subscription/webhook',
     json({
       verify: (req: any, res, buf) => {
         if (buf && buf.length) {
@@ -48,6 +48,7 @@ async function bootstrap() {
         `${process.env.DOMAIN_NAME}`,
         `${process.env.DOMAIN_NAME_WWW}`,
         'localhost:8080',
+        'http://localhost:3000',
       ];
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
