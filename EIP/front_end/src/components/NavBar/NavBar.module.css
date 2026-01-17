@@ -11,6 +11,17 @@
   grid-template-columns: var(--sidebar-width-collapsed) 1fr;
 }
 
+@media (max-width: 768px) {
+  .dashboardContainer {
+    grid-template-columns: 1fr;
+    padding-top: 60px;
+  }
+
+  .dashboardContainer.collapsed {
+    grid-template-columns: 1fr;
+  }
+}
+
 .topbar {
   position: fixed;
   top: 0;
@@ -55,7 +66,7 @@
   justify-content: space-between;
   padding: 24px;
   color: var(--text-light);
-  transition: width 0.3s ease, padding 0.3s ease;
+  transition: width 0.3s ease, padding 0.3s ease, transform 0.3s ease;
   position: fixed;
   top: var(--topbar-height);
 }
@@ -68,29 +79,50 @@
 
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 250px;
+    height: calc(100vh - 60px);
     padding: 16px;
-    width: var(--sidebar-width-collapsed) !important;
+    background-color: var(--primary-color);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 1px solid var(--sidebar-border);
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
   }
 
   .sidebar .logoText,
   .sidebar .menuText {
-    display: none;
+    display: block;
   }
 
   .sidebar .navLink {
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 12px;
   }
 }
 
 @media (max-width: 576px) {
   .sidebar {
     padding: 12px;
+    width: 220px;
   }
 }
 
 .sidebar.collapsed {
   width: var(--sidebar-width-collapsed);
   padding: 24px 16px;
+}
+
+@media (max-width: 768px) {
+  .sidebar.collapsed {
+    width: 250px;
+  }
 }
 
 .content {
@@ -171,6 +203,28 @@
   .topbarLeft,
   .topbarRight {
     gap: 8px;
+  }
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.hamburger:hover {
+  color: #fbb75f;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: none;
   }
 }
 
@@ -494,6 +548,12 @@
   gap: 8px;
   width: 100%;
   margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .motionToggle {
+    display: none;
+  }
 }
 
 .sidebar .motionToggle {

@@ -15,6 +15,7 @@ import styles from "./NavBar.module.css";
 
 export default function Navbar({ children }: { children: React.ReactNode }) {
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	const { setIsAuthenticated, organizationMemberInfo, userProfile } = useAuth();
 
@@ -118,7 +119,10 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 		<div className={`${styles.dashboardContainer} ${sidebarCollapsed ? styles.collapsed : ""}`}>
 			<header className={styles.topbar}>
 				<div className={styles.topbarLeft}>
-					<div className={styles.logo}>
+					<div 
+						className={styles.logo}
+						onClick={() => setSidebarOpen(!sidebarOpen)}
+					>
 						<Image
 							src="/assets/carrion_logo_crop.png"
 							alt="Logo"
@@ -159,8 +163,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 			</header>
 
 			<aside
-				className={`${styles.sidebar} ${sidebarCollapsed ? styles.collapsed : ""
-					}`}
+				className={`${styles.sidebar} ${sidebarCollapsed ? styles.collapsed : ""} ${sidebarOpen ? styles.mobileOpen : ""}`}
 			>
 				<div>
 					<ul className={styles.navbarMenu}>
@@ -168,8 +171,8 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 							<li key={link.href}>
 								<Link
 									href={link.href}
-									className={`${styles.navLink} ${pathname === link.href ? styles.active : ""
-										}`}
+									className={`${styles.navLink} ${pathname === link.href ? styles.active : ""}`}
+									onClick={() => setSidebarOpen(false)}
 								>
 									<Image
 										src={link.icon}
@@ -190,8 +193,8 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
 						<li>
 							<Link
 								href="/notification"
-								className={`${styles.navLink} ${pathname === "/notification" ? styles.active : ""
-									}`}
+								className={`${styles.navLink} ${pathname === "/notification" ? styles.active : ""}`}
+								onClick={() => setSidebarOpen(false)}
 							>
 								<div className={styles.notifications}>
 									<Image
