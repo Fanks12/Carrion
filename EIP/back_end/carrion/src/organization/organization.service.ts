@@ -67,6 +67,17 @@ export class OrganizationService {
     body: CreateOrganizationInvitationDTO,
   ) {
     try {
+      const invitedUser = await this.prisma.user.findUnique({
+        where: { email: body.email },
+        select: {
+          userOrganization: true,
+        },
+      });
+
+      if (invitedUser?.userOrganization) {
+        return { status: 409, message: 'ERROR_USER_ALREADY_IN_ORG' };
+      }
+
       const requester = await this.prisma.organizationMember.findUnique({
         where: {
           userId_organizationId: {
@@ -84,7 +95,7 @@ export class OrganizationService {
           },
         },
       });
-      if (!requester) throw new ForbiddenException('Member not found');
+      if (!requester) return { status: 403, message: 'ERROR_MEMBER_NOT_FOUND' };
       if (
         requester.userRole === OrganizationRole.TEACHER &&
         (body.role as unknown as string) !== OrganizationRole.STUDENT
@@ -118,7 +129,7 @@ export class OrganizationService {
         process.env.BREVO_API_KEY,
       );
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.subject = `Invitation à rejoindre ${organization.name} sur Carrion`;
+      sendSmtpEmail.subject = `Invitation to join ${organization.name} on Carrion`;
       sendSmtpEmail.htmlContent = `
 			<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
 				<h2 style="color: #0c1f3d;">You have been invited!</h2>
@@ -135,13 +146,20 @@ export class OrganizationService {
       await apiInstance.sendTransacEmail(sendSmtpEmail);
       return { status: 201, message: 'Invitation sent successfully.' };
     } catch (error) {
-      if (error.code == 'P2002')
-        throw new ConflictException('This user already received an invitation');
+      if (error.code == 'P2002') {
+        Logger.error(
+          'Invitation has already been sent to this user from this organization',
+        );
+        return { status: 400, message: 'ERROR_INVITATION_ALREADY_SENT' };
+      }
       if (
         error instanceof ForbiddenException ||
-        error instanceof NotFoundException
-      )
-        throw error;
+        error instanceof NotFoundException ||
+        error instanceof ConflictException
+      ) {
+        Logger.error(error);
+        return { status: 400, message: error.message };
+      }
       throw new InternalServerErrorException('Error sending invitation');
     }
   }

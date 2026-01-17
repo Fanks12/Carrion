@@ -23,6 +23,7 @@ interface AuthContextType {
 	logOut: (callApi?: boolean) => void;
 	checkAuthStatus: () => Promise<void>;
 	getUserDisplayName: () => string;
+	setOrganizationMemberInfo: (info: OrganizationMemberInfo | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -111,6 +112,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			logOut,
 			checkAuthStatus,
 			getUserDisplayName,
+			setOrganizationMemberInfo,
 		}),
 		[
 			isAuthenticated,
@@ -121,6 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			logOut,
 			checkAuthStatus,
 			getUserDisplayName,
+			setOrganizationMemberInfo,
 		]
 	);
 

@@ -884,35 +884,39 @@
         "change": "Error changing owner"
       },
       "emailRequired": "Email is required",
-      "invite": "Error sending invitation.",
+      "invite": "An error occurred while sending.",
+      "ERROR_USER_ALREADY_IN_ORG": "This user is already a member of an organization.",
+      "ERROR_INVITATION_ALREADY_SENT": "An invitation has already been sent to this user.",
+      "ERROR_MEMBER_NOT_FOUND": "Member not found.",
       "leave": "Error attempting to leave the organization."
     }
   },
   "invitation": {
-    "errors": {
-      "missingToken": "Invitation link missing.",
-      "invalid": "This invitation does not exist or has expired.",
-      "emailMismatch": "Connection refused: The account {{currentEmail}} does not match the invitation for {{targetEmail}}.",
-      "acceptFailed": "Error accepting."
-    },
-    "success": {
-      "connected": "Connection successful!",
-      "joined": "Welcome to the team!"
-    },
     "ui": {
-      "invalidTitle": "Invalid link",
+      "title": "Invitation Received",
+      "invitedBy": "invited you to join:",
+      "role": "Proposed role:",
+      "reservedFor": "This invitation is reserved for:",
+      "invalidTitle": "Invalid or expired link",
       "redirecting": "Redirecting to home...",
-      "title": "Invitation received",
-      "invitedBy": "invites you to join the organization:",
-      "role": "Role:",
-      "reservedFor": "This invitation is reserved for the address:"
+      "warningTitle": "Action Required",
+      "warningDescription": "You must leave your current organization to join {{org}}."
     },
     "buttons": {
+      "accept": "Accept Invitation",
       "validating": "Validating...",
-      "accept": "Accept and Join",
-      "ignore": "Ignore and go to dashboard",
+      "ignore": "Ignore",
       "createAccount": "Create an account",
-      "login": "I already have an account"
+      "login": "Login"
+    },
+    "errors": {
+      "missingToken": "Invitation token is missing.",
+      "invalid": "Invalid or expired invitation.",
+      "emailMismatch": "Wrong account: invitation is for {{targetEmail}}.",
+      "acceptFailed": "Failed to accept invitation."
+    },
+    "success": {
+      "joined": "Welcome! You have joined the organization."
     }
   },
   "setup": {

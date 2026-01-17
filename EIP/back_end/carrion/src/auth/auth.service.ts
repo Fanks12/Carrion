@@ -292,7 +292,7 @@ export class AuthService {
         process.env.BREVO_API_KEY,
       );
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.subject = 'Réinitialisation de mot de passe - Carrion';
+      sendSmtpEmail.subject = 'Reset password - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
 			<h2 style="color: #0c1f3d;">Password Reset Request</h2>
@@ -470,7 +470,7 @@ export class AuthService {
         process.env.BREVO_API_KEY,
       );
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.subject = 'Vérifiez votre adresse email - Carrion';
+      sendSmtpEmail.subject = 'Verify your email address - Carrion';
       sendSmtpEmail.htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
 				<h2 style="color: #0c1f3d;">Welcome to Carrion!</h2>
