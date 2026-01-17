@@ -30,7 +30,7 @@ model User {
   tokens                  Token[]                  @relation("UserTokens")
   userAchievements        UserAchievement[]        @relation("UserAchievements")
   notifications           Notification[]           @relation("UserNotifications")
-  userOrganization        OrganizationMember[]     @relation("UserOrganization")
+  userOrganization        OrganizationMember?     @relation("UserOrganization")
   organizationOwner       Organization?            @relation("OrganizationOwner")
   organizationInvitations OrganizationInvitation[]
   subscription            Subscription?            @relation("UserSubscription")
@@ -168,7 +168,7 @@ model Organization {
 
 model OrganizationMember {
   id             String           @id @default(uuid()) @db.Uuid
-  userId         String           @db.Uuid
+  userId         String           @db.Uuid @unique
   organizationId String           @db.Uuid
   userRole       OrganizationRole
   user           User             @relation("UserOrganization", fields: [userId], references: [id], onDelete: Cascade)
