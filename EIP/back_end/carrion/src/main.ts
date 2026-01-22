@@ -22,9 +22,9 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
-  
+
   // Configure body parser to preserve raw body for Stripe webhooks
-  app.use('/subscription/webhook', json({ 
+  app.use('/subscription/webhook', json({
     verify: (req: any, res, buf) => {
       if (buf && buf.length) {
         req.rawBody = Buffer.from(buf);
@@ -82,7 +82,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(process.env.PORT, "0.0.0.0");
+  await app.listen(process.env.PORT);
 
   // Initialize webhook monitoring after the app starts
   try {
