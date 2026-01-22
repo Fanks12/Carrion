@@ -74,22 +74,6 @@ export class AuthController {
   async signUp(@Body() userInfo: CreateUserDto, @Res() res) {
     const result = await this.authService.signUp(userInfo);
 
-    res.cookie('access_token', result.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
-    if (result.refreshToken) {
-      res.cookie('refresh_token', result.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-      });
-    }
-
     return res.status(HttpStatus.CREATED).send({
       id: result.id,
       message: 'User registered and logged in successfully',

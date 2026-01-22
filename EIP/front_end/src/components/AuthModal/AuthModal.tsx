@@ -214,7 +214,7 @@ export default function AuthModal({
 	);
 
 	const getModalTitle = () => {
-		if (isRegistrationComplete) return "Vérifiez vos emails";
+		if (isRegistrationComplete) return t("emailVerif.title");
 		if (activeTab === "forgotPassword") return t("auth.resetYourPassword");
 		if (activeTab === "login") return t("home.welcome");
 		return t("auth.joinUs");
@@ -241,12 +241,14 @@ export default function AuthModal({
 					<div style={{ textAlign: "center", padding: "20px 0" }}>
 						<div style={{ fontSize: "3rem", color: "#10b981", marginBottom: "1rem" }}>✉️</div>
 						<p style={{ marginBottom: "20px", fontSize: "1.1rem", color: "#4b5563" }}>
-							Un lien de confirmation a été envoyé à <strong>{credentials.email}</strong>.
+							{t("emailVerif.description", { email: credentials.email })}
 							<br /><br />
-							Veuillez cliquer dessus pour activer votre compte avant de vous connecter.
+							{t("emailVerif.info")}
+							<br /><br />
+							<em>{t("emailVerif.spam")}</em>
 						</p>
 						<PrimaryButton
-							text="Retour à la connexion"
+							text={t("emailVerif.back") as string}
 							onClick={() => {
 								setIsRegistrationComplete(false);
 								handleTabChange("login");

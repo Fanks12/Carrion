@@ -58,7 +58,6 @@
       "accepted": "Accepted",
       "rejected": "Rejected",
       "interview_scheduled": "Interview",
-      "interview_scheduled": "Interview",
       "archived": "Archived"
     },
     "stats": {
@@ -361,7 +360,6 @@
       "ACCEPTED": "Accepted",
       "REJECTED": "Rejected",
       "INTERVIEW_SCHEDULED": "Interview",
-      "INTERVIEW_SCHEDULED": "Interview",
       "INTERVIEW": "Interview",
       "REJECTED_BY_COMPANY": "Rejected",
       "ON": "Accepted",
@@ -504,7 +502,6 @@
   },
   "notifications": {
     "title": "Notifications",
-    "default": "A new notification is available",
     "default": "A new notification is available",
     "loading": "Loading notifications...",
     "application": {
@@ -654,18 +651,7 @@
       "goToButton": "Go to my position"
     },
     "search": {
-      "placeholder": "Search by name or email...",
-      "results": "Search results"
-    },
-    "friends": {
-      "add": "Add",
-      "remove": "Remove",
-      "title": "My friends",
-      "noFriends": "You don't have any friends yet. Add some from the main leaderboard!",
-      "noFriendsData": "None of your friends have applications yet."
-    },
-    "search": {
-      "placeholder": "Search by name or email...",
+      "placeholder": "Search by name...",
       "results": "Search results"
     },
     "friends": {
@@ -962,5 +948,13 @@
     "backHome": "Back to Home",
     "errorCode": "Error 404",
     "button": "Home"
+  },
+
+  "emailVerif": {
+    "title": "Check your email",
+    "description": "A confirmation link has been sent to {{email}}.",
+    "info": "Please click on it to activate your account before signing in.",
+    "spam": "This may take a few minutes. Please check your spam folder if you haven't received anything.",
+    "back": "Back to signin"
   }
 }
