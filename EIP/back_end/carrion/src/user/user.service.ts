@@ -234,7 +234,7 @@ export class UserService {
     return users.map((user) => {
       const totalApplications = user.jobApplies.length;
       const acceptedApplications = user.jobApplies.filter(
-        (app) => app.status === 'APPLIED',
+        (app) => app.status === 'OFFER_ACCEPTED',
       ).length;
       const pendingApplications = user.jobApplies.filter(
         (app) => app.status === 'PENDING',
@@ -270,7 +270,7 @@ export class UserService {
       users.map(async (user) => {
         const totalApplications = user.jobApplies.length;
         const acceptedApplications = user.jobApplies.filter(
-          (app) => app.status === 'APPLIED',
+          (app) => app.status === 'OFFER_ACCEPTED',
         ).length;
         const pendingApplications = user.jobApplies.filter(
           (app) => app.status === 'PENDING',

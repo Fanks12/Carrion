@@ -1,5 +1,7 @@
 {
   "common": {
+    "follow": "Follow",
+    "followed": "Following",
     "back": "Back",
     "loading": "Loading...",
     "loadingAuth": "Authentication loading...",
@@ -357,7 +359,6 @@
     },
     "statuses": {
       "PENDING": "Pending response",
-      "APPLIED": "Applied",
       "ACCEPTED": "Accepted",
       "REJECTED": "Rejected",
       "INTERVIEW_SCHEDULED": "Interview",
@@ -386,6 +387,14 @@
       "salary": "Salary: ",
       "close": "Close",
       "contractType": "Contract Type: "
+    },
+    "selection": {
+      "active": "Active Scan",
+      "enabled": "Automatic tracking enabled",
+      "disabled": "Automatic tracking disabled"
+    },
+    "errors": {
+      "PremiumError": "Limit of 5 applications reached. Upgrade to Premium!"
     }
   },
   "archives": {

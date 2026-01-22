@@ -32,7 +32,7 @@ function DetailsModal({
 
 	const getStatusConfig = (status: ApplicationStatus) => {
 		switch (status) {
-			case ApplicationStatus.APPLIED:
+			case ApplicationStatus.OFFER_ACCEPTED:
 				return { class: "status-accepted", icon: <CheckCircle2 size={16} /> };
 			case ApplicationStatus.PENDING:
 				return { class: "status-pending", icon: <Clock size={16} /> };

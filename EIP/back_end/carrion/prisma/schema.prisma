@@ -101,6 +101,7 @@ model jobApply {
   imageUrl      String?
   createdAt     DateTime  @default(now())
   contractType  String?
+  isSelected    Boolean   @default(false)
   interviewDate DateTime?
 }
 
@@ -193,7 +194,6 @@ model OrganizationInvitation {
 }
 
 enum Status {
-  APPLIED
   PENDING
   INTERVIEW_SCHEDULED
   TECHNICAL_TEST

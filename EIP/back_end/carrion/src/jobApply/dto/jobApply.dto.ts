@@ -9,6 +9,7 @@ import {
   IsOptional,
   IsUUID,
   IsNumber,
+  IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -45,9 +46,12 @@ export class JobApplyDto {
   status: ApplicationStatus;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
+  @IsDate()
   interviewDate?: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isSelected?: boolean;
 
   @IsNotEmpty()
   @MaxLength(255)
@@ -142,6 +146,16 @@ export class UpdateJobApplyDto {
   @IsOptional()
   @IsDate()
   interviewDate?: Date;
+
+  @ApiProperty({
+    name: 'isSelected',
+    description: 'isSelected of job',
+    type: 'boolean',
+    example: 'false',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isSelected?: boolean;
 }
 
 export class CreateJobApplyDto {
@@ -228,4 +242,14 @@ export class CreateJobApplyDto {
   @IsDate()
   @MaxLength(255)
   interviewDate?: Date;
+
+  @ApiProperty({
+    name: 'isSelected',
+    description: 'isSelected of job',
+    type: 'boolean',
+    example: 'false',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isSelected?: boolean;
 }

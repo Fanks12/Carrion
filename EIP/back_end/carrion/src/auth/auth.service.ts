@@ -380,8 +380,6 @@ export class AuthService {
         tokenTimeValidity: refreshTokenExpires,
       },
     });
-    console.log('token créée ?');
-    console.log(prismaAnswer);
   }
 
   async validateUser(

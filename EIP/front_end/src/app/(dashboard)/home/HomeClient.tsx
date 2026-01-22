@@ -172,11 +172,11 @@ export default function HomeClient({
 	};
 
 	const statusMap = {
-		APPLIED: t("dashboard.statuses.APPLIED") as string,
+		OFFER_ACCEPTED: t("dashboard.statuses.ACCEPTED") as string,
 		PENDING: t("dashboard.statuses.PENDING") as string,
 		REJECTED_BY_COMPANY: t("dashboard.statuses.REJECTED_BY_COMPANY") as string,
 		INTERVIEW_SCHEDULED: t("dashboard.statuses.INTERVIEW_SCHEDULED") as string,
-		OFFER_RECEIVED: t("dashboard.statuses.OFFER_RECEIVED") as string,
+		OFFER_RECEIVED: t("dashboard.statuses.OFFER") as string,
 	};
 
 	const openAddModal = () => setShowAddModal(true);

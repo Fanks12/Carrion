@@ -86,5 +86,6 @@ export class ExistingJobComparisonDto {
   status: ApplicationStatus;
   createdAt: Date;
   similarity: number;
+  isSelected: boolean;
   matchReason: string;
 }
