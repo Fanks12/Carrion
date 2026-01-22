@@ -199,7 +199,6 @@ function StatisticsContent({
 	const statusChartInfo = useMemo(() => {
 		if (!stats?.statusDistribution) return null;
 		const statusColors: Record<string, string> = {
-			APPLIED: "#fbb75f",
 			PENDING: "#f59e0b",
 			INTERVIEW_SCHEDULED: "#3b82f6",
 			OFFER_RECEIVED: "#10b981",

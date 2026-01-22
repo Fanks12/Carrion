@@ -1,5 +1,7 @@
 {
   "common": {
+    "follow": "Suivre",
+    "followed": "Suivi",
     "back": "Retour",
     "loading": "Chargement...",
     "loadingAuth": "Chargement de l'authentification...",
@@ -359,7 +361,6 @@
     },
     "statuses": {
       "PENDING": "En attente de réponse",
-      "APPLIED": "Postulée",
       "ACCEPTED": "Acceptée",
       "REJECTED": "Refusée",
       "INTERVIEW_SCHEDULED": "Entretien",
@@ -388,6 +389,14 @@
       "salary": "Salaire: ",
       "close": "Fermer",
       "contractType": "Type de contrat: "
+    },
+    "selection": {
+      "active": "Scan Actif",
+      "enabled": "Suivi automatique activé",
+      "disabled": "Suivi automatique désactivé"
+    },
+    "errors": {
+      "PremiumError": "Limite de 5 candidatures atteinte. Passez au Premium !"
     }
   },
   "archives": {

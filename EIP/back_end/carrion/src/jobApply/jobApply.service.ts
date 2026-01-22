@@ -28,6 +28,7 @@ export interface UpdateJobApply {
   status?: ApplicationStatus;
   contractType?: string;
   interviewDate?: Date;
+  isSelected?: boolean;
 }
 
 @Injectable()
@@ -57,6 +58,7 @@ export class JobApplyService {
         status: jobApply.status as ApplicationStatus,
         contractType: jobApply.contractType,
         interviewDate: jobApply.interviewDate,
+        isSelected: jobApply.isSelected,
         createdAt: jobApply.createdAt,
       }));
     } catch (error) {
@@ -123,6 +125,7 @@ export class JobApplyService {
         status: jobApply.status as ApplicationStatus,
         contractType: jobApply.contractType,
         interviewDate: jobApply.interviewDate,
+        isSelected: jobApply.isSelected,
         createdAt: jobApply.createdAt,
       };
     } catch (error) {
@@ -146,6 +149,7 @@ export class JobApplyService {
           contractType: createJobApplyDto.contractType,
           interviewDate: createJobApplyDto.interviewDate,
           title: createJobApplyDto.title,
+          isSelected: createJobApplyDto.isSelected,
         },
       });
 
@@ -170,6 +174,7 @@ export class JobApplyService {
         status: jobApply.status as ApplicationStatus,
         contractType: jobApply.contractType,
         interviewDate: jobApply.interviewDate,
+        isSelected: jobApply.isSelected,
         createdAt: jobApply.createdAt,
       };
     } catch (error) {
@@ -293,6 +298,7 @@ export class JobApplyService {
         status: updatedJobApply.status as ApplicationStatus,
         contractType: updatedJobApply.contractType,
         interviewDate: updatedJobApply.interviewDate,
+        isSelected: updatedJobApply.isSelected,
         createdAt: updatedJobApply.createdAt,
       };
     } catch (error) {
@@ -377,6 +383,9 @@ export class JobApplyService {
           ...(updateJobApply.salary ? { salary: updateJobApply.salary } : {}),
           ...(updateJobApply.status ? { status: updateJobApply.status } : {}),
           ...(validInterviewDate ? { interviewDate: validInterviewDate } : {}),
+          ...(updateJobApply.isSelected
+            ? { isSelected: updateJobApply.isSelected }
+            : {}),
         },
       });
 
@@ -523,6 +532,9 @@ export class JobApplyService {
           ...(updateJobApplyDto.interviewDate
             ? { interviewDate: updateJobApplyDto.interviewDate }
             : {}),
+          ...(updateJobApplyDto.isSelected
+            ? { isSelected: updateJobApplyDto.isSelected }
+            : {}),
         },
       });
 
@@ -547,6 +559,7 @@ export class JobApplyService {
         status: updatedJobApply.status as ApplicationStatus,
         contractType: updatedJobApply.contractType,
         interviewDate: updatedJobApply.interviewDate,
+        isSelected: updatedJobApply.isSelected,
         createdAt: updatedJobApply.createdAt,
       };
     } catch (error) {
@@ -608,6 +621,9 @@ export class JobApplyService {
             : {}),
           ...(updateJobApplyDto.interviewDate
             ? { interviewDate: updateJobApplyDto.interviewDate }
+            : {}),
+          ...(updateJobApplyDto.isSelected
+            ? { isSelected: updateJobApplyDto.isSelected }
             : {}),
         },
       });
@@ -760,6 +776,42 @@ export class JobApplyService {
       }));
     } catch (error) {
       throw new Error(`Error retrieving archived job applications: ${error}`);
+    }
+  }
+
+  async toggleSelection(id: string, userId: string) {
+    try {
+      const job = await this.prisma.jobApply.findUnique({
+        where: { id },
+      });
+
+      if (!job || job.userId !== userId) {
+        throw new Error('Candidature non trouvée ou non autorisée');
+      }
+
+      if (!job.isSelected) {
+        const subscription = await this.prisma.subscription.findUnique({
+          where: { userId },
+        });
+        const isPremium = subscription?.status === 'ACTIVE';
+
+        if (!isPremium) {
+          const selectedCount = await this.prisma.jobApply.count({
+            where: { userId, isSelected: true },
+          });
+
+          if (selectedCount >= 5) {
+            throw new Error('PremiumError');
+          }
+        }
+      }
+
+      return this.prisma.jobApply.update({
+        where: { id },
+        data: { isSelected: !job.isSelected },
+      });
+    } catch (error) {
+      return { error: error.message, statusCode: 500 };
     }
   }
 }

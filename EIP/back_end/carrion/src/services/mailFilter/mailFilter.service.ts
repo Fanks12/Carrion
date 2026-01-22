@@ -191,9 +191,6 @@ export class MailFilterService {
     );
   }
 
-  /**
-   * Clean up expired cache entries
-   */
   private cleanupResponseCache(): void {
     const now = Date.now();
     let removedCount = 0;
@@ -210,9 +207,6 @@ export class MailFilterService {
     );
   }
 
-  /**
-   * Generate cache key for similar emails
-   */
   private generateCacheKey(emailText: string, emailSubject?: string): string {
     const normalizedText = emailText
       .toLowerCase()
@@ -230,9 +224,6 @@ export class MailFilterService {
       .digest('hex');
   }
 
-  /**
-   * Get cached response if available
-   */
   private getCachedResponse(cacheKey: string): ExtractedJobDataDto | null {
     const cached = this.responseCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < this.RESPONSE_CACHE_TTL) {
@@ -243,9 +234,6 @@ export class MailFilterService {
     return null;
   }
 
-  /**
-   * Store response in cache
-   */
   private setCachedResponse(
     cacheKey: string,
     response: ExtractedJobDataDto | null,
@@ -256,9 +244,6 @@ export class MailFilterService {
     });
   }
 
-  /**
-   * Log performance metrics
-   */
   private logMetrics(): void {
     this.logger.log(
       'MailFilter Performance Metrics:',
@@ -285,9 +270,6 @@ export class MailFilterService {
     );
   }
 
-  /**
-   * Generate a unique hash for email content to detect duplicates
-   */
   private generateEmailHash(
     emailText: string,
     userId: string,
@@ -302,9 +284,6 @@ export class MailFilterService {
     return timestampedHash;
   }
 
-  /**
-   * Check if email has already been processed recently
-   */
   private isEmailAlreadyProcessed(emailHash: string): boolean {
     const baseHash = emailHash.split(':')[0];
 
@@ -321,9 +300,6 @@ export class MailFilterService {
     return false;
   }
 
-  /**
-   * Mark email as processed
-   */
   private markEmailAsProcessed(emailHash: string): void {
     this.processedEmails.add(emailHash);
   }
@@ -395,28 +371,6 @@ export class MailFilterService {
     return textContent.trim();
   }
 
-  /**
-   * Pre-filter emails to identify job-related content - DISABLED
-   * All emails will now be processed by Claude AI
-   */
-  /*
-  private isJobRelatedEmail(
-    emailText: string,
-    emailSubject?: string,
-    emailSender?: string,
-  ): { isJobRelated: boolean; confidence: number; reason: string } {
-
-    return {
-      isJobRelated: true,
-      confidence: 100,
-      reason: 'pre-filtering disabled',
-    };
-  }
-  */
-
-  /**
-   * Generate optimized prompt based on email content length and complexity
-   */
   private generateOptimizedPrompt(
     emailText: string,
     isComplex: boolean = false,
@@ -472,7 +426,7 @@ EXPECTED FORMAT EXAMPLE:
   "location": "string|null",
   "salary": "string|null",
   "contractType": "Full-time|Part-time|Internship|Contract|Freelance|null",
-  "status": "PENDING|APPLIED|INTERVIEW_SCHEDULED|TECHNICAL_TEST|OFFER_RECEIVED|NEGOTIATION|OFFER_ACCEPTED|REJECTED_BY_COMPANY|OFFER_DECLINED|APPLICATION_WITHDRAWN",
+  "status": "PENDING|INTERVIEW_SCHEDULED|TECHNICAL_TEST|OFFER_RECEIVED|NEGOTIATION|OFFER_ACCEPTED|REJECTED_BY_COMPANY|OFFER_DECLINED|APPLICATION_WITHDRAWN",
   "interviewDate": "YYYY-MM-DDTHH:mm:ss.sssZ|null",
   "offerReference": "string|null"
 }
@@ -496,8 +450,7 @@ MANDATORY: Only the JSON markdown block above
 - Examples: "Software Developer", "Marketing Manager", "Data Scientist"
 
 ### Status (MANDATORY - BUSINESS LOGIC)
-- **PENDING**: Application received, awaiting response
-- **APPLIED**: Application already sent
+- **PENDING**: Application received, awaiting response / Application already sent
 - **INTERVIEW_SCHEDULED**: Interview invitation / appointment scheduled 
 - **TECHNICAL_TEST**: Technical test
 - **OFFER_RECEIVED**: Offer received
@@ -673,9 +626,6 @@ If validation fails → return null
       emailSubject,
       emailSender,
     );
-    this.logger.log(
-      `Processing email for user ${userId}. Subject: "${emailSubject}", Sender: "${emailSender}"`,
-    );
 
     const preFilterResult =
       await this.preFilterService.shouldProcessWithClaudeAI(
@@ -709,26 +659,16 @@ If validation fails → return null
     try {
       if (!preFilterResult.shouldProcess) {
         analysis.systemReflection.finalDecision = `Email filtré: ${preFilterResult.reason}`;
-        analysis.finalResult = `Email filtered: ${preFilterResult.reason} (confidence: ${preFilterResult.confidence})`;
+        analysis.finalResult = `Email filtered: ${preFilterResult.reason}`;
         analysis.processingTime = Date.now() - startTime;
         this.addAnalysisToHistory(analysis);
-        this.logger.log(`Email pre-filtered out: ${preFilterResult.reason}`);
         return analysis.finalResult;
       }
 
-      this.logger.log(
-        `Email passed pre-filtering with confidence ${preFilterResult.confidence}`,
-      );
-
       const existingJobs = await this.getExistingJobsForComparison(userId);
-      console.log('existingJobs', existingJobs);
       let emailContext = `Email Body:\n${emailText}\n`;
-      if (emailSubject) {
-        emailContext += `\nEmail Subject: ${emailSubject}\n`;
-      }
-      if (emailSender) {
-        emailContext += `\nEmail Sender: ${emailSender}\n`;
-      }
+      if (emailSubject) emailContext += `\nEmail Subject: ${emailSubject}\n`;
+      if (emailSender) emailContext += `\nEmail Sender: ${emailSender}\n`;
 
       const isComplex = this.isComplexEmail(emailText);
       const optimizedPrompt = this.generateOptimizedPrompt(
@@ -743,10 +683,7 @@ If validation fails → return null
       let parsedData: ExtractedJobDataDto | null = null;
 
       if (cachedResponse) {
-        this.logger.log(`Using cached response for similar email`);
         parsedData = cachedResponse;
-        analysis.systemReflection.claudeAIReasoning =
-          'Réponse trouvée en cache';
       } else {
         analysis.claudeAIUsed = true;
         parsedData = await this.callMistralAIWithFallback(
@@ -754,37 +691,16 @@ If validation fails → return null
           emailContext,
           isComplex,
         );
-
-        analysis.systemReflection.claudeAIReasoning =
-          this.generateClaudeAIReasoning(parsedData, isComplex, existingJobs);
-
-        if (parsedData) {
-          this.setCachedResponse(cacheKey, parsedData);
-        }
+        if (parsedData) this.setCachedResponse(cacheKey, parsedData);
       }
 
       analysis.extractedData = parsedData;
 
-      if (!parsedData) {
-        analysis.systemReflection.finalDecision = 'Échec extraction Claude AI';
-        analysis.finalResult =
-          'Erreur lors du parsing du JSON de la réponse claudeAI.';
-        analysis.processingTime = Date.now() - startTime;
-        this.addAnalysisToHistory(analysis);
-        this.logger.error(
-          'Failed to get valid response from claudeAI or cache.',
-        );
-        return analysis.finalResult;
-      } else if (!parsedData.title || !parsedData.company) {
-        analysis.systemReflection.finalDecision =
-          'Données insuffisantes extraites';
+      if (!parsedData || !parsedData.title || !parsedData.company) {
         analysis.finalResult =
           'Email analyzed but no valid job application data found';
         analysis.processingTime = Date.now() - startTime;
         this.addAnalysisToHistory(analysis);
-        this.logger.warn(
-          `Didn't create jobApply for this mail: ${emailSender + ' ' + emailSubject}`,
-        );
         return analysis.finalResult;
       }
 
@@ -794,59 +710,77 @@ If validation fails → return null
           parsedData.status as ApplicationStatus,
         )
       ) {
-        this.logger.warn(
-          `Invalid or missing status from claudeAI: '${parsedData.status}'. Defaulting to PENDING.`,
-        );
         parsedData.status = ApplicationStatus.PENDING;
       }
+
+      const userSubscription = await this.prisma.subscription.findUnique({
+        where: { userId },
+      });
+      const isPremium = userSubscription?.status === 'ACTIVE';
 
       const jobComparison = await this.compareWithExistingJobs(
         parsedData,
         userId,
         existingJobs,
+        isPremium,
       );
       analysis.existingJobsComparison = jobComparison;
 
       if (jobComparison.foundSimilar) {
         const similarJob = jobComparison.similarJobs[0];
         if (similarJob.action === 'updated') {
-          analysis.systemReflection.finalDecision = `Existing job updated: ${similarJob.title} at ${similarJob.company}`;
+          await this.prisma.jobApply.update({
+            where: { id: similarJob.id },
+            data: { status: parsedData.status as ApplicationStatus },
+          });
+          analysis.systemReflection.finalDecision = `Job mis à jour (Premium ou suivi): ${similarJob.title}`;
           analysis.finalResult = `Job application updated successfully (ID: ${similarJob.id})`;
           analysis.jobApplyId = similarJob.id;
         } else {
-          analysis.systemReflection.finalDecision = `Similar job found but no action taken: ${similarJob.title} at ${similarJob.company}`;
-          analysis.finalResult = `Similar job found but no action taken (ID: ${similarJob.id})`;
+          analysis.systemReflection.finalDecision = `Update bloqué: User non-premium et job non suivi`;
+          analysis.finalResult = `Update skipped (Free tier limit)`;
         }
       } else {
         const newJobResult = await this.createJobApply(parsedData, userId);
-        analysis.systemReflection.finalDecision = `New job created: ${parsedData.title} at ${parsedData.company}`;
         analysis.finalResult = newJobResult;
-
         const idMatch = newJobResult.match(/ID: ([^)]+)/);
-        if (idMatch) {
-          analysis.jobApplyId = idMatch[1];
-        }
+        if (idMatch) analysis.jobApplyId = idMatch[1];
       }
 
       analysis.processingTime = Date.now() - startTime;
       this.addAnalysisToHistory(analysis);
       return analysis.finalResult;
     } catch (error) {
-      analysis.systemReflection.finalDecision = `Erreur: ${error.message}`;
       analysis.finalResult = error.message;
-      analysis.processingTime = Date.now() - startTime;
       this.addAnalysisToHistory(analysis);
-      this.logger.error(
-        `Erreur avec l'API claudeAI ou lors du traitement: ${error.message}`,
-        error.stack,
-      );
       return error.message;
     }
   }
 
-  /**
-   * Call claudeAI with fallback mechanism for better reliability
-   */
+  private async compareWithExistingJobs(
+    parsedData: ExtractedJobDataDto,
+    userId: string,
+    existingJobs: ExistingJobComparisonDto[],
+    isPremium: boolean,
+  ) {
+    let foundSimilar = false;
+    const similarJobs = [];
+    for (const job of existingJobs) {
+      if (this.calculateJobSimilarity(parsedData, job) >= 0.85) {
+        foundSimilar = true;
+        const action = isPremium || job.isSelected ? 'updated' : 'blocked';
+        similarJobs.push({
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          action,
+        });
+        break;
+      }
+    }
+    return { foundSimilar, similarJobs };
+  }
+
   private async callMistralAIWithFallback(
     prompt: string,
     emailContext: string,
@@ -878,12 +812,6 @@ If validation fails → return null
       if (!rawResponse) {
         throw new Error('MistralAI returned an empty response.');
       }
-
-      // if (rawResponse.type !== 'text') {
-      //   throw new Error(
-      //     `ClaudeAI returned an unexpected content block type: ${rawResponse.type}`,
-      //   );
-      // }
 
       const parsedData: ExtractedJobDataDto | null = extractJsonFromString(
         rawResponse as string,
@@ -1030,9 +958,6 @@ If validation fails → return null
     }
   }
 
-  /**
-   * Extract readable text content from Outlook message
-   */
   private extractTextFromOutlookMessage(
     outlookMessage: OutlookMessage,
   ): string {
@@ -1057,9 +982,6 @@ If validation fails → return null
     return content.trim();
   }
 
-  /**
-   * Initialize monitoring system
-   */
   onModuleInit() {
     setInterval(
       () => {
@@ -1083,9 +1005,6 @@ If validation fails → return null
     );
   }
 
-  /**
-   * Enhanced cache cleanup with memory management
-   */
   private performCacheCleanup(): void {
     const now = Date.now();
 
@@ -1143,9 +1062,6 @@ If validation fails → return null
     );
   }
 
-  /**
-   * Estimate current memory usage
-   */
   private estimateMemoryUsage(): {
     processedEmailsMB: number;
     responseCacheMB: number;
@@ -1167,9 +1083,6 @@ If validation fails → return null
     };
   }
 
-  /**
-   * Get cache statistics for monitoring
-   */
   public getCacheStats(): any {
     const memoryUsage = this.estimateMemoryUsage();
 
@@ -1193,9 +1106,6 @@ If validation fails → return null
     };
   }
 
-  /**
-   * Get cache optimization recommendations
-   */
   private getCacheRecommendation(totalMemoryMB: number): string {
     if (totalMemoryMB > 50) {
       return 'HIGH MEMORY USAGE - Consider Redis or reducing TTL';
@@ -1206,9 +1116,6 @@ If validation fails → return null
     return 'OPTIMAL MEMORY USAGE - Current setup is efficient';
   }
 
-  /**
-   * Get performance metrics
-   */
   public getPerformanceMetrics(): any {
     return {
       ...this.metrics,
@@ -1232,9 +1139,6 @@ If validation fails → return null
     };
   }
 
-  /**
-   * Log performance metrics periodically
-   */
   private logPerformanceMetrics(): void {
     const metrics = this.getPerformanceMetrics();
     this.logger.log(`Performance Metrics:
@@ -1247,9 +1151,6 @@ If validation fails → return null
   Avg Processing Time: ${metrics.averageProcessingTime}ms`);
   }
 
-  /**
-   * Get the current user count from database with caching
-   */
   private async getUserCount(): Promise<number> {
     const now = Date.now();
 
@@ -1280,9 +1181,6 @@ If validation fails → return null
     }
   }
 
-  /**
-   * Get the concurrent email processing limit (dynamically calculated from real user count)
-   */
   public async getConcurrentEmailLimit(): Promise<number> {
     const userCount = await this.getUserCount();
 
@@ -1293,9 +1191,6 @@ If validation fails → return null
     return 35;
   }
 
-  /**
-   * Get current performance status and recommendations (with real user count)
-   */
   public async getPerformanceRecommendations(): Promise<any> {
     const userCount = await this.getUserCount();
     const currentLimit = await this.getConcurrentEmailLimit();
@@ -1443,6 +1338,7 @@ If validation fails → return null
           status: job.status,
           contractType: job.contractType || null,
           createdAt: job.createdAt,
+          isSelected: job.isSelected,
           similarity: 0,
           matchReason: '',
         }));
@@ -1457,102 +1353,6 @@ If validation fails → return null
       );
       return [];
     }
-  }
-
-  private async compareWithExistingJobs(
-    parsedData: ExtractedJobDataDto,
-    userId: string,
-    existingJobs: ExistingJobComparisonDto[],
-  ): Promise<{
-    foundSimilar: boolean;
-    similarJobs: Array<{
-      id: string;
-      title: string;
-      company: string;
-      similarity: number;
-      action: 'updated' | 'created' | 'ignored';
-    }>;
-  }> {
-    const similarJobs = [];
-
-    this.logger.log(
-      `Comparing new job "${parsedData.title}" at "${parsedData.company}" with ${existingJobs.length} existing jobs`,
-    );
-
-    for (const existingJob of existingJobs) {
-      const similarity = this.calculateJobSimilarity(parsedData, existingJob);
-
-      this.logger.log(
-        `Similarity with "${existingJob.title}" at "${existingJob.company}": ${(similarity * 100).toFixed(1)}%`,
-      );
-
-      if (similarity > 0.75) {
-        const companySimilarity = this.stringSimilarity(
-          parsedData.company?.toLowerCase() || '',
-          existingJob.company?.toLowerCase() || '',
-        );
-
-        if (companySimilarity < 0.5) {
-          this.logger.log(
-            `Rejecting match due to different companies: "${parsedData.company}" vs "${existingJob.company}" (${(companySimilarity * 100).toFixed(1)}% similar)`,
-          );
-          continue;
-        }
-
-        let action: 'updated' | 'created' | 'ignored' = 'ignored';
-        if (similarity > 0.8) {
-          try {
-            const updateJobApply: UpdateJobApply = {
-              location: parsedData.location,
-              salary: parsedData.salary
-                ? Number.parseInt(parsedData.salary)
-                : undefined,
-              status: parsedData.status,
-              interviewDate:
-                parsedData.interviewDate &&
-                parsedData.interviewDate !== 'null' &&
-                parsedData.interviewDate.trim() !== ''
-                  ? new Date(parsedData.interviewDate)
-                  : null,
-              contractType: parsedData.contractType,
-            };
-
-            await this.jobApplyService.updateJobApplyByMail(
-              existingJob.id,
-              userId,
-              updateJobApply,
-            );
-            action = 'updated';
-            this.logger.log(
-              `Updated existing job ${existingJob.id}: ${existingJob.title} at ${existingJob.company}`,
-            );
-          } catch (error) {
-            this.logger.error(
-              `Failed to update job ${existingJob.id}: ${error.message}`,
-            );
-          }
-        }
-
-        similarJobs.push({
-          id: existingJob.id,
-          title: existingJob.title,
-          company: existingJob.company,
-          similarity,
-          action,
-        });
-      }
-    }
-
-    if (similarJobs.length === 0) {
-      this.logger.log(
-        `No similar jobs found. Creating new job for "${parsedData.title}" at "${parsedData.company}"`,
-      );
-    }
-
-    return {
-      foundSimilar: similarJobs.length > 0,
-      similarJobs: similarJobs.sort((a, b) => b.similarity - a.similarity),
-    };
   }
 
   private calculateJobSimilarity(
@@ -1601,11 +1401,6 @@ If validation fails → return null
     }
 
     const finalScore = maxScore > 0 ? score / maxScore : 0;
-
-    this.logger.debug(
-      `Similarity calculation: Company(${((score / maxScore) * 0.5 * 100).toFixed(1)}%) + Title(${((score / maxScore) * 0.3 * 100).toFixed(1)}%) = ${(finalScore * 100).toFixed(1)}%`,
-    );
-
     return finalScore;
   }
 
