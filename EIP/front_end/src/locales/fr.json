@@ -58,7 +58,6 @@
       "accepted": "Acceptées",
       "rejected": "Refusées",
       "interview_scheduled": "Entretien",
-      "interview_scheduled": "Entretien",
       "archived": "Archivées"
     },
     "stats": {
@@ -363,7 +362,6 @@
       "ACCEPTED": "Acceptée",
       "REJECTED": "Refusée",
       "INTERVIEW_SCHEDULED": "Entretien",
-      "INTERVIEW_SCHEDULED": "Entretien",
       "INTERVIEW": "Entretien",
       "REJECTED_BY_COMPANY": "Refusée",
       "ON": "Acceptée",
@@ -507,7 +505,6 @@
 
   "notifications": {
     "title": "Notifications",
-    "default": "Une nouvelle notification est disponible",
     "default": "Une nouvelle notification est disponible",
     "loading": "Chargement des notifications...",
     "application": {
@@ -658,18 +655,7 @@
       "goToButton": "Aller à ma position"
     },
     "search": {
-      "placeholder": "Rechercher par nom ou email...",
-      "results": "Résultats de recherche"
-    },
-    "friends": {
-      "add": "Ajouter",
-      "remove": "Retirer",
-      "title": "Mes amis",
-      "noFriends": "Vous n'avez pas encore d'amis. Ajoutez-en depuis le classement principal !",
-      "noFriendsData": "Aucun de vos amis n'a encore de candidatures."
-    },
-    "search": {
-      "placeholder": "Rechercher par nom ou email...",
+      "placeholder": "Rechercher par nom...",
       "results": "Résultats de recherche"
     },
     "friends": {
@@ -972,5 +958,13 @@
     "backHome": "Retour à l'accueil",
     "errorCode": "Erreur 404",
     "button": "Accueil"
+  },
+
+  "emailVerif": {
+    "title": "Vérifiez vos mails",
+    "description": "Un lien de confirmation a été envoyé à {{email}}.",
+    "info": "Veuillez cliquer dessus pour activer votre compte avant de vous connecter.",
+    "spam": "Cette opération peut prendre jusqu'à quelques minutes. Merci de vérifier votre dossier spam si vous n'avez rien reçu.",
+    "back": "Retour à la connexion"
   }
 }

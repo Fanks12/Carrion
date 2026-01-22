@@ -116,7 +116,12 @@ function OrganizationContent() {
 			setViewingMemberError(null);
 
 			try {
-				if (viewingMember?.user?.id) {
+				if (
+					isAuthenticated &&
+					(organizationMemberInfo?.userRole === 'OWNER' ||
+					organizationMemberInfo?.userRole === 'TEACHER') &&
+					organizationMemberInfo?.organizationId
+				) {
 					const statsRes = await ApiService.get<StatisticsData>(`/statistics/${viewingMember.user.id}`);
 					setViewingMemberStats(statsRes);
 				}
@@ -128,7 +133,7 @@ function OrganizationContent() {
 			}
 		};
 
-		if (viewingMember) {
+		if (isAuthenticated && viewingMember) {
 			fetchMemberStats();
 		}
 	}, [viewingMember]);

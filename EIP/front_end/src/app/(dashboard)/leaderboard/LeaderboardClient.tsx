@@ -455,16 +455,13 @@ function LeaderboardContent({
 								</div>
 								<div className={styles.rankingUserInfo}>
 									<h3>
-										{user.firstName
-											? `${user.firstName} ${user.lastName}`
-											: user.username}
+										{user.username}
 										{currentUser?.id === user.id && (
 											<span className={styles.rankingYouBadge}>
 												{t("ranking.badges.you") as string}
 											</span>
 										)}
 									</h3>
-									<p>{user.email}</p>
 								</div>
 								<div className={styles.rankingUserStats}>
 									<div className={styles.rankingStatItemPrimary}>
