@@ -13,8 +13,6 @@ RUN npx prisma generate
 RUN npm run build
 
 EXPOSE 8080
-
-COPY launcher.sh ./
-RUN chmod +x launcher.sh
-
-CMD ["./launcher.sh"]
+RUN npm run build
+RUN npx prisma generate
+CMD ["npm", "run", "start:dev"]

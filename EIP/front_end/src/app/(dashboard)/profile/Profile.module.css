@@ -173,3 +173,126 @@
   cursor: pointer;
   font-weight: bold;
 }
+
+@media (max-width: 1024px) {
+  .profilePage {
+    padding: 1.5rem 2rem;
+  }
+
+  .profileLeftColumn {
+    flex: 2;
+    min-width: 380px;
+  }
+
+  .profileRightColumn {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .profileInfoForm .formGrid {
+    gap: 1.25rem 1.5rem;
+  }
+
+  .profileCard {
+    padding: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .profileContainer {
+    flex-direction: column;
+  }
+
+  .profileRightColumn {
+    order: 1;
+    position: static;
+    min-width: unset;
+  }
+
+  .profileLeftColumn {
+    order: 2;
+    min-width: unset;
+  }
+
+  .profilePictureCard {
+    padding: 2rem 1.5rem;
+  }
+
+  .imageWrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profileName {
+    font-size: 1.1rem;
+  }
+
+  .profileCard h2 {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileContainer {
+    gap: 1.25rem;
+  }
+
+  .profileLeftColumn,
+  .profileRightColumn {
+    gap: 1.25rem;
+  }
+
+  .profileCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .profileInfoForm .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formGroup.fullWidth {
+    grid-column: span 1;
+  }
+
+  .formActionsGlobal {
+    justify-content: center;
+  }
+
+  .saveButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .profilePage {
+    padding: 0.75rem;
+  }
+
+  .profileCard {
+    padding: 1.25rem 1rem;
+  }
+
+  .profileCard h2 {
+    font-size: 1rem;
+  }
+
+  .profileName {
+    font-size: 1rem;
+  }
+
+  .imageWrapper {
+    width: 90px;
+    height: 90px;
+  }
+
+  .formGroup input,
+  .datePickerCustomInput {
+    height: 44px !important;
+    font-size: 0.9rem;
+  }
+
+  .saveButton {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+}
