@@ -14,6 +14,34 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 992px) {
+  .landingHeader {
+    padding: 12px 20px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .landingHeader {
+    padding: 10px 15px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .landingHeader {
+    padding: 8px 10px;
+    height: 55px;
+  }
+}
+
+@media (max-width: 350px) {
+  .landingHeader {
+    padding: 8px 8px;
+    height: 50px;
+  }
+}
+
 .landingHeader.hidden {
   height: 50px;
   top: calc(-1 * 50px);
@@ -39,6 +67,39 @@
   padding: 10px 80px;
 }
 
+@media (max-width: 1200px) {
+  .landingHeader nav {
+    padding: 10px 60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .landingHeader nav {
+    padding: 10px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .landingHeader nav {
+    padding: 8px 15px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .landingHeader nav {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 350px) {
+  .landingHeader nav {
+    padding: 6px 8px;
+    gap: 5px;
+  }
+}
+
 .logoContainer {
   display: flex;
   flex-direction: row;
@@ -49,6 +110,34 @@
 .logoContainer :global(img) {
   width: 65px;
   height: 65px;
+}
+
+@media (max-width: 992px) {
+  .logoContainer :global(img) {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logoContainer :global(img) {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logoContainer :global(img) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 350px) {
+  .logoContainer :global(img) {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 .logoContainer :global(a),
@@ -68,6 +157,42 @@
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
+@media (max-width: 992px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 350px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 10px;
+  }
+}
+
 .navigationActions {
   display: flex;
   flex-direction: row;
@@ -79,26 +204,29 @@
 }
 
 @media (max-width: 992px) {
-  .landingHeader nav {
-    padding: 20px 40px;
-    max-height: 50px;
+  .navigationActions {
+    gap: 15px;
+    padding: 0 5px;
   }
 }
 
 @media (max-width: 768px) {
-  .landingHeader nav {
-    padding: 10px 15px;
+  .navigationActions {
+    gap: 10px;
+    padding: 0 3px;
   }
 }
 
 @media (max-width: 576px) {
-  .landingHeader nav {
-    padding: 8px 8px;
+  .navigationActions {
+    gap: 8px;
+    padding: 0 2px;
   }
 }
 
 @media (max-width: 350px) {
-  .logoContainer a {
-    font-size: 12px;
+  .navigationActions {
+    gap: 5px;
+    padding: 0 2px;
   }
 }

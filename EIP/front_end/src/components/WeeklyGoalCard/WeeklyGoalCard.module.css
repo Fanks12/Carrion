@@ -7,7 +7,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.2s ease;
-  height: 420px;
+  min-height: 420px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -182,11 +182,11 @@
 @media (max-width: 768px) {
   .weeklyGoalCard {
     padding: 20px;
-    height: 300px; /* Hauteur fixe pour tablettes */
+    min-height: 300px;
   }
 
   .weeklyGoalCard.loading {
-    height: 300px; /* Même hauteur pour le loading */
+    min-height: 300px;
   }
 
   .weeklyGoalCard .progressCircleContainer {
@@ -214,11 +214,11 @@
 @media (max-width: 480px) {
   .weeklyGoalCard {
     padding: 16px;
-    height: 280px;
+    min-height: 280px;
   }
 
   .weeklyGoalCard.loading {
-    height: 280px;
+    min-height: 280px;
   }
 
   .weeklyGoalCard .progressCircleContainer {

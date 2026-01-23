@@ -10,6 +10,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { OrganizationRole } from "@/enum/organization.enum";
 import { orgRolesWithRights } from "@/services/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { StatisticsData } from "@/interface/statistics.interface";
+import StatisticsClient from "../statistics/StatisticsClient";
 
 interface UserProfile {
 	firstName: string | null;
@@ -78,6 +80,10 @@ function OrganizationContent() {
 	const [isSaving, setIsSaving] = useState(false);
 	const [viewingMember, setViewingMember] = useState<OrganizationMember | null>(null);
 
+	const [viewingMemberStats, setViewingMemberStats] = useState<StatisticsData | null>(null);
+	const [viewingMemberError, setViewingMemberError] = useState<string | null>(null);
+	const [viewingMemberLoading, setViewingMemberLoading] = useState(false);
+
 	useEffect(() => {
 		const fetchOrganizationData = async () => {
 			try {
@@ -102,6 +108,35 @@ function OrganizationContent() {
 			fetchOrganizationData();
 		}
 	}, [isAuthenticated, organizationMemberInfo]);
+
+	useEffect(() => {
+		const fetchMemberStats = async () => {
+
+			setViewingMemberLoading(true);
+			setViewingMemberError(null);
+
+			try {
+				if (
+					isAuthenticated &&
+					(organizationMemberInfo?.userRole === 'OWNER' ||
+					organizationMemberInfo?.userRole === 'TEACHER') &&
+					organizationMemberInfo?.organizationId
+				) {
+					const statsRes = await ApiService.get<StatisticsData>(`/statistics/${viewingMember?.user.id}`);
+					setViewingMemberStats(statsRes);
+				}
+			} catch (error) {
+				console.error("Error fetching member statistics:", error);
+				setViewingMemberError(error instanceof Error ? error.message : 'Failed to fetch statistics');
+			} finally {
+				setViewingMemberLoading(false);
+			}
+		};
+
+		if (isAuthenticated && viewingMember) {
+			fetchMemberStats();
+		}
+	}, [viewingMember]);
 
 	const canManage = orgRolesWithRights.includes(organizationMemberInfo?.userRole as unknown as string);
 
@@ -188,10 +223,25 @@ function OrganizationContent() {
 					<div className={styles.headerTitle}>
 						<h1>{t("organization.viewAs.title", { name: getDisplayName(viewingMember.user) })}</h1>
 					</div>
-					<button onClick={handleBack} className={styles.backButton} aria-label={t("common.back") as string}>{t("common.back")}</button>
+					<button
+						onClick={handleBack}
+						className={styles.backButton}
+						aria-label={t("common.back") as string}
+					>
+						{t("common.back")}
+					</button>
 				</header>
 				<section className={styles.viewAsContainer}>
-					<div style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>{t("organization.viewAs.placeholder", { name: getDisplayName(viewingMember.user) })}</div>
+					{viewingMemberLoading ? (
+						<Loading />
+					) : (
+						<StatisticsClient
+							stats={viewingMemberStats}
+							goalSettings={null}
+							userRanking={null}
+							error={viewingMemberError}
+						/>
+					)}
 				</section>
 			</main>
 		);

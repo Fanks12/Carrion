@@ -107,16 +107,10 @@ function LandingPageContent() {
 				<section className={`${styles.statsSection}`}>
 					<div className={styles.statsContainer}>
 						<div className={`${styles.statItem} ${styles.pulseAnimation}`}>
-							<h3 className={styles.statNumber}>10,000+</h3>
-							<p className={styles.statLabel}>{t("landing.stats.users")}</p>
 						</div>
 						<div className={`${styles.statItem} ${styles.pulseAnimation} ${styles.delay1}`}>
-							<h3 className={styles.statNumber}>95%</h3>
-							<p className={styles.statLabel}>{t("landing.stats.success")}</p>
 						</div>
 						<div className={`${styles.statItem} ${styles.pulseAnimation} ${styles.delay2}`}>
-							<h3 className={styles.statNumber}>24/7</h3>
-							<p className={styles.statLabel}>{t("landing.stats.support")}</p>
 						</div>
 					</div>
 				</section>
@@ -129,6 +123,7 @@ function LandingPageContent() {
 						<div className={`${styles.serviceBox} ${styles.hoverLift} ${styles.cardSlideLeft}`}>
 							<Image src="/assets/svg/search_lucide.svg" alt="Recherche" width={50} height={50} />
 							<h3>{t("landing.services.tracking.title")}</h3>
+							<br></br>
 							<ul>
 								{(t("landing.services.tracking.points") as string[]).map((point: string, index: number) => (
 									<li key={index}>{point}</li>
@@ -138,6 +133,7 @@ function LandingPageContent() {
 						<div className={`${styles.serviceBox} ${styles.hoverLift} ${styles.cardSlideRight}`}>
 							<Image src="/assets/svg/calendar_lucide.svg" alt="Calendrier" width={50} height={50} />
 							<h3>{t("landing.services.goals.title")}</h3>
+							<br></br>
 							<ul>
 								{(t("landing.services.goals.points") as string[]).map((point: string, index: number) => (
 									<li key={index}>{point}</li>
@@ -147,6 +143,7 @@ function LandingPageContent() {
 						<div className={`${styles.serviceBox} ${styles.hoverLift} ${styles.cardSlideLeft}`}>
 							<Image src="/assets/svg/bar_chart_lucide.svg" alt="Graphique" width={50} height={50} />
 							<h3>{t("landing.services.reminders.title")}</h3>
+							<br></br>
 							<ul>
 								{(t("landing.services.reminders.points") as string[]).map((point: string, index: number) => (
 									<li key={index}>{point}</li>
@@ -156,6 +153,7 @@ function LandingPageContent() {
 						<div className={`${styles.serviceBox} ${styles.hoverLift} ${styles.cardSlideRight}`}>
 							<Image src="/assets/svg/folder_lucide.svg" alt="Dossier" width={50} height={50} />
 							<h3>{t("landing.services.documents.title")}</h3>
+							<br></br>
 							<ul>
 								{(t("landing.services.documents.points") as string[]).map((point: string, index: number) => (
 									<li key={index}>{point}</li>
@@ -170,7 +168,17 @@ function LandingPageContent() {
 					<div className={styles.tutorialContent}>
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideLeft}`}>
 							<div className={styles.tutorialImageContainer}>
-								<Image src="/assets/centralize_landing.png" alt="Centralisation" width={200} height={200} />
+								<Image
+										src="/assets/centralize_landing.png"
+										alt="Centralisation"
+										fill
+										sizes="(max-width: 768px) 100vw, 65vw"
+										style={{
+											objectFit: 'contain',
+											objectPosition: 'left'
+										}}
+										priority
+									/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.centralize.title")}</h3>
@@ -179,7 +187,17 @@ function LandingPageContent() {
 						</div>
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideRight}`}>
 							<div className={styles.tutorialImageContainer}>
-								<Image src="/assets/progression_landing.png" alt="Suivi" width={200} height={200} />
+								<Image
+										src="/assets/progression_landing.png"
+										alt="Suivi"
+										fill
+										sizes="(max-width: 768px) 100vw, 65vw"
+										style={{
+											objectFit: 'contain',
+											objectPosition: 'right'
+										}}
+										priority
+									/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.track.title")}</h3>
@@ -188,46 +206,21 @@ function LandingPageContent() {
 						</div>
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideLeft}`}>
 							<div className={styles.tutorialImageContainer}>
-								<Image src="/assets/optimize_landing.jpg" alt="Optimisation" width={200} height={200} />
+								<Image
+										src="/assets/optimize_landing.jpg"
+										alt="Optimisation"
+										fill
+										sizes="(max-width: 768px) 100vw, 65vw"
+										style={{
+											objectFit: 'contain',
+											objectPosition: 'left'
+										}}
+										priority
+									/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.optimize.title")}</h3>
 								<p>{t("landing.howItWorks.optimize.description")}</p>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section className={`${styles.testimonialsSection} ${styles.animateOnScroll}`}>
-					<h2 className={`${styles.sectionsTitle} ${styles.slideUp}`}>
-						{t("landing.testimonials.title")}
-					</h2>
-					<div className={styles.testimonialsContainer}>
-						<div className={`${styles.testimonialCard} ${styles.hoverLift} ${styles.cardSlideUp}`}>
-							<div className={styles.testimonialContent}>
-								<p>{t("landing.testimonials.testimonial1.content")}</p>
-								<div className={styles.testimonialAuthor}>
-									<strong>{t("landing.testimonials.testimonial1.author")}</strong>
-									<span>{t("landing.testimonials.testimonial1.position")}</span>
-								</div>
-							</div>
-						</div>
-						<div className={`${styles.testimonialCard} ${styles.hoverLift} ${styles.cardSlideUp} ${styles.delay1}`}>
-							<div className={styles.testimonialContent}>
-								<p>{t("landing.testimonials.testimonial2.content")}</p>
-								<div className={styles.testimonialAuthor}>
-									<strong>{t("landing.testimonials.testimonial2.author")}</strong>
-									<span>{t("landing.testimonials.testimonial2.position")}</span>
-								</div>
-							</div>
-						</div>
-						<div className={`${styles.testimonialCard} ${styles.hoverLift} ${styles.cardSlideUp} ${styles.delay2}`}>
-							<div className={styles.testimonialContent}>
-								<p>{t("landing.testimonials.testimonial3.content")}</p>
-								<div className={styles.testimonialAuthor}>
-									<strong>{t("landing.testimonials.testimonial3.author")}</strong>
-									<span>{t("landing.testimonials.testimonial3.position")}</span>
-								</div>
 							</div>
 						</div>
 					</div>

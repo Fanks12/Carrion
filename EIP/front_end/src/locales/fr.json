@@ -665,7 +665,7 @@
       "goToButton": "Aller à ma position"
     },
     "search": {
-      "placeholder": "Rechercher par nom ou email...",
+      "placeholder": "Rechercher par nom...",
       "results": "Résultats de recherche"
     },
     "friends": {
@@ -675,7 +675,6 @@
       "noFriends": "Vous n'avez pas encore d'amis. Ajoutez-en depuis le classement principal !",
       "noFriendsData": "Aucun de vos amis n'a encore de candidatures."
     },
-
     "pagination": {
       "previous": "Précédent",
       "next": "Suivant",
@@ -1053,5 +1052,13 @@
       "errorSubmit": "Une erreur est survenue lors de la soumission.",
       "errorUnknown": "Une erreur inconnue est survenue."
     }
+  },
+
+  "emailVerif": {
+    "title": "Vérifiez vos mails",
+    "description": "Un lien de confirmation a été envoyé à {{email}}.",
+    "info": "Veuillez cliquer dessus pour activer votre compte avant de vous connecter.",
+    "spam": "Cette opération peut prendre jusqu'à quelques minutes. Merci de vérifier votre dossier spam si vous n'avez rien reçu.",
+    "back": "Retour à la connexion"
   }
 }

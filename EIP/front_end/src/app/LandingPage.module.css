@@ -50,6 +50,19 @@
   padding: 10px 80px;
 }
 
+@media (max-width: 768px) {
+  .landingHeader nav {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .landingHeader nav {
+    padding: 8px 8px;
+  }
+}
+
 .logoContainer {
   display: flex;
   flex-direction: row;
@@ -60,6 +73,20 @@
 .logoContainer :global(img) {
   width: 65px;
   height: 65px;
+}
+
+@media (max-width: 768px) {
+  .logoContainer :global(img) {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logoContainer :global(img) {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .logoContainer :global(a),
@@ -77,6 +104,38 @@
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+@media (max-width: 768px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 14px;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navigationActions {
+    gap: 12px;
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navigationActions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logoContainer :global(a),
+  .logoContainer :global(a:visited),
+  .logoContainer :global(a:active),
+  .logoContainer :global(a:focus-visible) {
+    font-size: 12px;
+  }
 }
 
 .navigationActions {
@@ -99,6 +158,40 @@
   gap: 60px;
 }
 
+@media (max-width: 1200px) {
+  .heroContent {
+    margin: 0 60px;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .heroContent {
+    flex-direction: column;
+    align-items: center;
+    margin: 0 40px;
+    padding: 40px 0;
+    gap: 40px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    margin: 0 20px;
+    padding: 30px 0;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroContent {
+    margin: 0 15px;
+    padding: 20px 0;
+    gap: 20px;
+  }
+}
+
 .heroImageContainer {
   position: relative;
   width: 50vw;
@@ -108,6 +201,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 1200px) {
+  .heroImageContainer {
+    width: 40vw;
+    max-width: 480px;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .heroImageContainer {
+    order: 2;
+    width: 60vw;
+    max-width: 400px;
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroImageContainer {
+    width: 70vw;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroImageContainer {
+    width: 80vw;
+    max-width: 300px;
+  }
 }
 
 .mainImageWrapper {
@@ -121,7 +245,23 @@
 .mainHeroImage {
   width: 100%;
   height: 100%;
-  border-radius: 20px;
+ 
+
+@media (max-width: 992px) {
+  .heroDescription {
+    align-items: center;
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroDescription {
+    width: 100%;
+  }
+} border-radius: 20px;
   object-fit: cover;
   object-position: center;
   display: block;
@@ -148,14 +288,62 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  height: 100%;
+ 
+
+@media (max-width: 1200px) {
+  .heroDescription :global(p) {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .heroDescription :global(p) {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroDescription :global(p) {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroDescription :global(p) {
+    font-size: 16px;
+  }
+} height: 100%;
   max-width: 45%;
   flex: 1;
   gap: 14px;
 }
 
 .heroDescription :global(div) {
-  width: 100% !important;
+ 
+
+@media (max-width: 1200px) {
+  .heroDescription :global(h1) {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 992px) {
+  .heroDescription :global(h1) {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroDescription :global(h1) {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroDescription :global(h1) {
+    font-size: 30px;
+  }
+} width: 100% !important;
   max-width: 280px;
 }
 
@@ -184,6 +372,18 @@
   padding: 0 5rem;
 }
 
+@media (max-width: 1200px) {
+  .servicesSection {
+    padding: 0 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .servicesSection {
+    padding: 30px 1.5rem;
+  }
+}
+
 .servicesContent {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -192,6 +392,27 @@
   width: 100%;
   box-sizing: border-box;
   justify-items: center;
+}
+
+@media (max-width: 992px) {
+  .servicesContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .servicesContent {
+    padding: 1rem 0;
+    gap: 1rem;
+ 
+
+@media (max-width: 768px) {
+  .sectionsTitle :global(h2) {
+    font-size: 32px;
+  }
+} }
 }
 
 .sectionsTitle {
@@ -218,6 +439,21 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .serviceBox {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .serviceBox {
+    max-width: 400px;
+    margin: 0 auto;
+    width: 90%;
+  }
 }
 
 .serviceBox::before {
@@ -275,6 +511,41 @@
   font-weight: bold;
 }
 
+@media (max-width: 768px) {
+  .tutorialSections :global(h2) {
+    font-size: 32px;
+  }
+}
+
+
+@media (max-width: 992px) {
+  .tutorialBox {
+    display: flex;
+    flex-direction: column !important;
+ 
+
+@media (max-width: 992px) {
+  .tutorialImageContainer {
+    height: 60%;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutorialImageContainer {
+    height: 180px;
+  }
+}   align-self: center;
+    width: 80%;
+    height: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutorialBox {
+    width: 95%;
+  }
+}
 .tutorialContent {
   display: flex;
   flex-direction: column;
@@ -287,9 +558,21 @@
 .tutorialBox {
   display: flex;
   background-color: #ffffff;
-  border-radius: var(--large-border-radius);
+ 
+
+@media (max-width: 768px) {
+  .textBox :global(h3) {
+    font-size: 18px;
+  }
+} border-radius: var(--large-border-radius);
   overflow: hidden;
-  box-shadow: -5px 5px 4px 0px rgba(251, 183, 95, 0.5);
+ 
+
+@media (max-width: 768px) {
+  .textBox :global(p) {
+    font-size: 16px;
+  }
+} box-shadow: -5px 5px 4px 0px rgba(251, 183, 95, 0.5);
   height: 320px;
   transition: all 0.3s ease;
 }
@@ -319,14 +602,27 @@
 .textBox :global(h3) {
   font-size: 22px;
   color: var(--text-color-dark);
-  font-weight: bold;
+ 
+
+@media (max-width: 768px) {
+  .statsContainer {
+    gap: 40px;
+    flex-direction: column;
+  }
+} font-weight: bold;
   margin-top: 0;
   margin-bottom: 12px;
 }
 
 .textBox :global(p) {
   font-size: 18px;
-  color: var(--text-color-dark);
+ 
+
+@media (max-width: 768px) {
+  .statNumber {
+    font-size: 36px;
+  }
+} color: var(--text-color-dark);
   line-height: 1.4;
   margin-bottom: 0;
   max-width: 100%;
@@ -342,6 +638,12 @@
   margin: 60px 0;
 }
 
+
+@media (max-width: 768px) {
+  .statLabel {
+    font-size: 16px;
+  }
+}
 .statsContainer {
   display: flex;
   justify-content: center;
@@ -433,8 +735,20 @@
 }
 
 .ctaSection {
-  padding: 100px 20px;
-  background-color: var(--primary-color);
+ 
+
+@media (max-width: 768px) {
+  .ctaContent :global(h2) {
+    font-size: 36px;
+  }
+} padding: 100px 20px;
+ 
+
+@media (max-width: 768px) {
+  .ctaContent :global(p) {
+    font-size: 18px;
+  }
+} background-color: var(--primary-color);
   text-align: center;
   position: relative;
   overflow: hidden;
