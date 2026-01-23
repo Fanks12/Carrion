@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, FolderOpen, Plus } from "lucide-react";
+import { Search, Plus, FileText } from "lucide-react"
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import apiService from "@/services/api";
@@ -15,17 +15,6 @@ import { JobApply } from "@/interface/job-apply.interface";
 import { ApplicationStatus } from "@/enum/application-status.enum";
 import toast from "react-hot-toast";
 import styles from "./Dashboard.module.css";
-
-interface ApiError {
-	error?: string;
-	response?: {
-		data?: {
-			message?: string;
-		};
-	};
-	statusCode?: number;
-	message?: string;
-}
 
 interface DashboardClientProps {
 	initialApplications: Application[];
@@ -57,6 +46,19 @@ export default function DashboardClient({ initialApplications, error: initialErr
 		[ApplicationStatus.OFFER_RECEIVED]: t("dashboard.statuses.OFFER"),
 		[ApplicationStatus.REJECTED_BY_COMPANY]: t("dashboard.statuses.REJECTED_BY_COMPANY"),
 	} as Record<ApplicationStatus, string>), [t]);
+
+	const stats = useMemo(
+		() => ({
+			total: applications.length,
+			pending: applications.filter((app) => app.status === ApplicationStatus.PENDING).length,
+			accepted: applications.filter((app) =>
+				app.status === ApplicationStatus.OFFER_RECEIVED ||
+				app.status === ApplicationStatus.OFFER_ACCEPTED
+			).length,
+			refused: applications.filter((app) => app.status === ApplicationStatus.REJECTED_BY_COMPANY).length,
+		}),
+		[applications]
+	);
 
 	const handleUpdateApplication = async () => {
 		if (!selectedApplication) return;
@@ -92,7 +94,6 @@ export default function DashboardClient({ initialApplications, error: initialErr
 			}
 		} catch (error: unknown) {
 			const err = error as Error;
-
 			toast.error(err.message || "Une erreur est survenue");
 		}
 	};
@@ -120,6 +121,24 @@ export default function DashboardClient({ initialApplications, error: initialErr
 			});
 	}, [applications, selectedStatuses, sortBy, searchTerm, statusMap]);
 
+	const handleArchiveApplication = async (id: string) => {
+		try {
+			await apiService.post(`/job_applies/${id}/archive`, {});
+			setApplications((prev) => prev.filter((app) => app.id !== id));
+		} catch (err: unknown) {
+			console.error(t("dashboard.errors.archiveError"), err);
+		}
+	};
+
+	const handleDeleteApplication = async (id: string) => {
+		try {
+			await apiService.delete(`/job_applies/${id}`, {});
+			setApplications((prev) => prev.filter((app) => app.id !== id));
+		} catch (err: unknown) {
+			console.error(t("dashboard.errors.deleteError"), err);
+		}
+	};
+
 	const closePopup = () => {
 		setSelectedApplication(null);
 		setPopupType(null);
@@ -146,6 +165,25 @@ export default function DashboardClient({ initialApplications, error: initialErr
 						</div>
 					</div>
 				</header>
+
+				<section className={styles.statsContainer}>
+					<div className={styles.statCard}>
+						<h3 className={styles.statTitle}>{t("shared.stats.total")}</h3>
+						<p className={styles.statValue}>{stats.total}</p>
+					</div>
+					<div className={`${styles.statCard} ${styles.pending}`}>
+						<h3 className={styles.statTitle}>{t("shared.stats.pending")}</h3>
+						<p className={styles.statValue}>{stats.pending}</p>
+					</div>
+					<div className={`${styles.statCard} ${styles.accepted}`}>
+						<h3 className={styles.statTitle}>{t("shared.stats.accepted")}</h3>
+						<p className={styles.statValue}>{stats.accepted}</p>
+					</div>
+					<div className={`${styles.statCard} ${styles.refused}`}>
+						<h3 className={styles.statTitle}>{t("shared.stats.refused")}</h3>
+						<p className={styles.statValue}>{stats.refused}</p>
+					</div>
+				</section>
 
 				<section className={styles.controlsContainer}>
 					<div className={styles.filterContainer}>
@@ -177,33 +215,41 @@ export default function DashboardClient({ initialApplications, error: initialErr
 				</section>
 
 				<div className={viewMode === "grid" ? styles.applicationsGrid : styles.applicationsList}>
-					{sortedAndFiltered.map((app) => (
-						viewMode === "grid" ? (
-							<ApplicationCard
-								key={app.id}
-								application={app as JobApply}
-								isPremium={isPremium}
-								statusMap={statusMap}
-								onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
-								onArchive={() => { }}
-								onDelete={() => { }}
-								onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
-								onToggleSelection={handleToggleSelection}
-							/>
-						) : (
-							<ApplicationList
-								key={app.id}
-								application={app as JobApply}
-								isPremium={isPremium}
-								statusMap={statusMap}
-								onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
-								onArchive={() => { }}
-								onDelete={() => { }}
-								onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
-								onToggleSelection={handleToggleSelection}
-							/>
-						)
-					))}
+					{sortedAndFiltered.length > 0 ? (
+						sortedAndFiltered.map((app) => (
+							viewMode === "grid" ? (
+								<ApplicationCard
+									key={app.id}
+									application={app as JobApply}
+									isPremium={isPremium}
+									statusMap={statusMap}
+									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
+									onArchive={() => { handleArchiveApplication(app.id); }}
+									onDelete={() => { handleDeleteApplication(app.id); }}
+									onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
+									onToggleSelection={handleToggleSelection}
+								/>
+							) : (
+								<ApplicationList
+									key={app.id}
+									application={app as JobApply}
+									isPremium={isPremium}
+									statusMap={statusMap}
+									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
+									onArchive={() => { handleArchiveApplication(app.id); }}
+									onDelete={() => { handleDeleteApplication(app.id); }}
+									onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
+									onToggleSelection={handleToggleSelection}
+								/>
+							)
+						))
+					) : (
+						<div className={styles.emptyState}>
+							<FileText size={48} className={styles.emptyIcon} />
+							<h3 className={styles.emptyTitle}>{t("dashboard.empty.title")}</h3>
+							<p className={styles.emptyText}>{t("dashboard.empty.text")}</p>
+						</div>
+					)}
 				</div>
 			</div>
 
