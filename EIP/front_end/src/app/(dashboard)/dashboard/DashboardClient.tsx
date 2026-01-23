@@ -120,6 +120,24 @@ export default function DashboardClient({ initialApplications, error: initialErr
 			});
 	}, [applications, selectedStatuses, sortBy, searchTerm, statusMap]);
 
+	const handleArchiveApplication = async (id: string) => {
+		try {
+			await apiService.post(`/job_applies/${id}/archive`, {});
+			setApplications((prev) => prev.filter((app) => app.id !== id));
+		} catch (err: unknown) {
+			console.error(t("dashboard.errors.archiveError"), err);
+		}
+	};
+
+	const handleDeleteApplication = async (id: string) => {
+		try {
+			await apiService.delete(`/job_applies/${id}`, {});
+			setApplications((prev) => prev.filter((app) => app.id !== id));
+		} catch (err: unknown) {
+			console.error(t("dashboard.errors.deleteError"), err);
+		}
+	};
+
 	const closePopup = () => {
 		setSelectedApplication(null);
 		setPopupType(null);
@@ -185,8 +203,8 @@ export default function DashboardClient({ initialApplications, error: initialErr
 								isPremium={isPremium}
 								statusMap={statusMap}
 								onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
-								onArchive={() => { }}
-								onDelete={() => { }}
+								onArchive={() => { handleArchiveApplication(app.id); }}
+								onDelete={() => { handleDeleteApplication(app.id); }}
 								onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
 								onToggleSelection={handleToggleSelection}
 							/>
@@ -197,8 +215,8 @@ export default function DashboardClient({ initialApplications, error: initialErr
 								isPremium={isPremium}
 								statusMap={statusMap}
 								onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
-								onArchive={() => { }}
-								onDelete={() => { }}
+								onArchive={() => { handleArchiveApplication(app.id); }}
+								onDelete={() => { handleDeleteApplication(app.id); }}
 								onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
 								onToggleSelection={handleToggleSelection}
 							/>
