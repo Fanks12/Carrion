@@ -1,5 +1,7 @@
 {
   "common": {
+    "follow": "Suivre",
+    "followed": "Suivi",
     "back": "Retour",
     "loading": "Chargement...",
     "loadingAuth": "Chargement de l'authentification...",
@@ -109,7 +111,7 @@
     "logout": "Déconnexion",
     "seeAll": "Voir toutes les notifications",
     "organization": "Organisation",
-    "subscribe": "Prendre une souscription"
+    "subscribe": "Abonnement"
   },
   "landing": {
     "title": "La plateforme idéale pour gérer ses candidatures",
@@ -231,9 +233,10 @@
     "passwordInvalid": "Le mot de passe ne respecte pas tous les critères.",
     "criteria": {
       "length": "Au moins 8 caractères",
-      "letter": "Contient une lettre",
+      "upper": "Contient une majuscule",
+      "lower": "Contient une minuscule",
       "number": "Contient un chiffre",
-      "special": "Contient un caractère spécial (@$!%*#?&)"
+      "special": "Contient un caractère spécial"
     },
     "resetYourPassword": "Réinitialiser votre mot de passe",
     "forgotPasswordInstructions": "Veuillez entrer votre adresse e-mail. Nous vous enverrons un lien pour réinitialiser votre mot de passe.",
@@ -358,7 +361,6 @@
     },
     "statuses": {
       "PENDING": "En attente de réponse",
-      "APPLIED": "Postulée",
       "ACCEPTED": "Acceptée",
       "REJECTED": "Refusée",
       "INTERVIEW_SCHEDULED": "Entretien",
@@ -387,6 +389,14 @@
       "salary": "Salaire: ",
       "close": "Fermer",
       "contractType": "Type de contrat: "
+    },
+    "selection": {
+      "active": "Scan Actif",
+      "enabled": "Suivi automatique activé",
+      "disabled": "Suivi automatique désactivé"
+    },
+    "errors": {
+      "PremiumError": "Limite de 5 candidatures atteinte. Passez au Premium !"
     }
   },
   "archives": {
@@ -891,36 +901,40 @@
         "change": "Erreur lors du changement de propriétaire"
       },
       "emailRequired": "L'email est obligatoire",
-      "invite": "Erreur lors de l'envoi de l'invitation.",
+      "invite": "Une erreur est survenue lors de l'envoi.",
+      "ERROR_USER_ALREADY_IN_ORG": "Cet utilisateur appartient déjà à une organisation.",
+      "ERROR_INVITATION_ALREADY_SENT": "Une invitation a déjà été envoyée à cet utilisateur.",
+      "ERROR_MEMBER_NOT_FOUND": "Membre introuvable.",
       "leave": "Erreur lors de la tentative de quitter l'organisation."
     }
   },
 
   "invitation": {
-    "errors": {
-      "missingToken": "Lien d'invitation manquant.",
-      "invalid": "Cette invitation n'existe pas ou a expiré.",
-      "emailMismatch": "Connexion refusée : Le compte {{currentEmail}} ne correspond pas à l'invitation pour {{targetEmail}}.",
-      "acceptFailed": "Erreur lors de l'acceptation."
-    },
-    "success": {
-      "connected": "Connexion réussie !",
-      "joined": "Bienvenue dans l'équipe !"
-    },
     "ui": {
-      "invalidTitle": "Lien invalide",
-      "redirecting": "Redirection vers l'accueil...",
       "title": "Invitation reçue",
-      "invitedBy": "vous invite à rejoindre l'organisation :",
-      "role": "Rôle :",
-      "reservedFor": "Cette invitation est réservée à l'adresse :"
+      "invitedBy": "vous a invité à rejoindre :",
+      "role": "Rôle proposé :",
+      "reservedFor": "Cette invitation est réservée à :",
+      "invalidTitle": "Lien invalide ou expiré",
+      "redirecting": "Redirection vers l'accueil...",
+      "warningTitle": "Action requise",
+      "warningDescription": "Vous devez quitter votre organisation actuelle pour rejoindre {{org}}."
     },
     "buttons": {
-      "validating": "Validation...",
-      "accept": "Accepter et Rejoindre",
-      "ignore": "Ignorer et aller au dashboard",
+      "accept": "Accepter l'invitation",
+      "validating": "Validation en cours...",
+      "ignore": "Ignorer",
       "createAccount": "Créer un compte",
-      "login": "J'ai déjà un compte"
+      "login": "Se connecter"
+    },
+    "errors": {
+      "missingToken": "Jeton d'invitation manquant.",
+      "invalid": "Invitation invalide ou expirée.",
+      "emailMismatch": "Compte incorrect : l'invitation est pour {{targetEmail}}.",
+      "acceptFailed": "Échec de l'acceptation."
+    },
+    "success": {
+      "joined": "Bienvenue dans l'organisation !"
     }
   },
 
@@ -932,23 +946,52 @@
       "autoDesc": "Liez votre boîte mail. Nous détectons et ajoutons vos candidatures automatiquement.",
       "goToProfileBtn": "Configurer dans mon Profil",
       "manualBtn": "Je préfère saisir manuellement",
-      "profileNote": "Info : Vous pourrez changer d'avis à tout moment."
+      "profileNote": "Info : Vous pourrez changer d'avis à tout moment.",
+      "autoBadge": "Recommandé"
     }
   },
   "subscription": {
-    "title": "Souscription Premium",
-    "subtitle": "Passez à la version Premium et profitez de fonctionnalités exclusives",
-    "subscribe": "S'abonner",
-    "processing": "Traitement en cours...",
-    "features": {
-      "feature1": "Accès illimité à toutes les fonctionnalités",
-      "feature2": "Support prioritaire",
-      "feature3": "Statistiques avancées",
-      "feature4": "Export de données en illimité"
+    "pageTitle": "Choisissez votre offre",
+    "pageSubtitle": "Commencez gratuitement et passez à la vitesse supérieure quand vous êtes prêt.",
+    "currentPlan": "Votre offre",
+    "month": "mois",
+    "active": "Activé",
+    "upgrade": "Passer illimité",
+    "included": "Inclus",
+    "contactUs": "Nous contacter",
+    "processing": "Chargement...",
+    "condition": "* Nécessite de lier un compte Google (Gmail) ou Microsoft (Outlook).",
+    "manage": "Gérer mon abonnement",
+    "plans": {
+      "free": {
+        "name": "Gratuit",
+        "description": "Pour découvrir la plateforme.",
+        "feature1": "Suivi auto: 5 candidatures *",
+        "feature2": "Suivi manuel illimité",
+        "feature3": "Accès au tableau de bord",
+        "feature4": "Données sécurisées"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Pour ne plus être limité.",
+        "feature1": "Suivi auto: Illimité *",
+        "feature2": "Suivi manuel illimité",
+        "feature3": "Soutien au projet ❤️",
+        "feature4": "Mises à jour futures incluses"
+      },
+      "enterprise": {
+        "name": "Organisation",
+        "price": "Sur devis",
+        "description": "Pour les écoles et structures.",
+        "feature1": "Gestion multi-comptes",
+        "feature2": "Dashboard administrateur",
+        "feature3": "Suivi des étudiants/équipes",
+        "feature4": "Support dédié"
+      }
     },
     "errors": {
-      "createSession": "Erreur lors de la création de la session de paiement",
-      "generic": "Une erreur est survenue. Veuillez réessayer."
+      "createSession": "Impossible de créer la session de paiement.",
+      "generic": "Une erreur est survenue."
     }
   },
 
@@ -958,6 +1001,57 @@
     "backHome": "Retour à l'accueil",
     "errorCode": "Erreur 404",
     "button": "Accueil"
+  },
+
+  "infosModal": {
+    "title": "Compléter votre profil",
+    "step1": {
+      "lastName": "Nom",
+      "firstName": "Prénom",
+      "birthDate": "Date de naissance",
+      "city": "Ville",
+      "searchCityPlaceholder": "Recherchez une ville...",
+      "searching": "Recherche...",
+      "noCityFound": "Aucune ville trouvée",
+      "school": "Université",
+      "phone": "Numéro de téléphone"
+    },
+    "step2": {
+      "contractType": "Type de contrat",
+      "selectPlaceholder": "Sélectionnez...",
+      "sector": "Secteur",
+      "sectorPlaceholder": "Sélectionnez un ou plusieurs secteurs...",
+      "locations": "Localisations souhaitées",
+      "goalQuestion": "Quel est ton objectif principal ?",
+      "goals": {
+        "centralisation": "La centralisation des candidatures",
+        "automatisation": "Le suivi automatisé",
+        "documents": "L’espace documents"
+      }
+    },
+    "step3": {
+      "addCv": "Ajoute ton CV ici :",
+      "viewCvTooltip": "Cliquer pour visualiser le CV",
+      "uploadCvTooltip": "Cliquer pour ajouter un CV",
+      "deleteCv": "Supprimer mon CV",
+      "linkedin": "LinkedIn",
+      "portfolio": "Portfolio",
+      "description": "Petite description de toi"
+    },
+    "buttons": {
+      "next": "Suivant",
+      "previous": "Précédent",
+      "submit": "Valider les informations"
+    },
+    "toasts": {
+      "successFull": "Profil et CV sauvegardés avec succès !",
+      "successProfile": "Profil sauvegardé avec succès !",
+      "errorSign": "Échec de la génération de l'URL signée",
+      "errorS3": "Échec de l'envoi du CV sur S3",
+      "errorSave": "Erreur de sauvegarde : lors de la création du profil",
+      "errorSubmit": "Une erreur est survenue lors de la soumission.",
+      "errorUnknown": "Une erreur inconnue est survenue."
+    }
   },
 
   "emailVerif": {

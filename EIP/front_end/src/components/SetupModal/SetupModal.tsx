@@ -33,7 +33,7 @@ export default function SetupModal({ isOpen, onClose }: SetupModalProps) {
 					<p className={styles.description}>{t("setup.choice.description")}</p>
 					<div className={styles.optionsContainer}>
 						<div className={styles.optionCard}>
-							<span className={styles.badge}>Recommandé</span>
+							<span className={styles.badge}>{t("setup.choice.autoBadge")}</span>
 							<h3>{t("setup.choice.autoTitle")}</h3>
 							<p>{t("setup.choice.autoDesc")}</p>
 							<button className={styles.primaryButton} onClick={handleAutoRedirect}>

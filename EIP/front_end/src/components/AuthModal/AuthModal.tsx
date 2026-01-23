@@ -46,7 +46,8 @@ export default function AuthModal({
 
 	const [passwordCriteria, setPasswordCriteria] = useState({
 		length: false,
-		letter: false,
+		upper: false,
+		lower: false,
 		number: false,
 		special: false,
 	});
@@ -54,9 +55,10 @@ export default function AuthModal({
 	const validatePassword = (password: string) => {
 		setPasswordCriteria({
 			length: password.length >= 8,
-			letter: /[A-Za-z]/.test(password),
+			upper: /[A-Z]/.test(password),
+			lower: /[a-z]/.test(password),
 			number: /\d/.test(password),
-			special: /[@$!%*#?&]/.test(password),
+			special: /.*[\W_]/.test(password),
 		});
 	};
 
@@ -421,7 +423,8 @@ export default function AuthModal({
 										</div>
 										<ul className={styles.passwordCriteria}>
 											<ValidationCriterion isValid={passwordCriteria.length} text={t("auth.criteria.length") as string} />
-											<ValidationCriterion isValid={passwordCriteria.letter} text={t("auth.criteria.letter") as string} />
+											<ValidationCriterion isValid={passwordCriteria.upper} text={t("auth.criteria.upper") as string} />
+											<ValidationCriterion isValid={passwordCriteria.lower} text={t("auth.criteria.lower") as string} />
 											<ValidationCriterion isValid={passwordCriteria.number} text={t("auth.criteria.number") as string} />
 											<ValidationCriterion isValid={passwordCriteria.special} text={t("auth.criteria.special") as string} />
 										</ul>

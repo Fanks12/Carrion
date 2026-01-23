@@ -118,4 +118,18 @@ export class SubscriptionController {
   async getSubscriptionStatus(@Request() req) {
     return this.subscriptionService.getSubscriptionStatus(req.user.id);
   }
+
+  @Post('create-portal-session')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Create Stripe Customer Portal session' })
+  async createPortalSession(@Request() req, @Res() res) {
+    try {
+      const result = await this.subscriptionService.createPortalSession(
+        req.user.id,
+      );
+      return res.json(result);
+    } catch (error) {
+      return res.status(500).json({ message: 'Error creating portal session' });
+    }
+  }
 }

@@ -75,6 +75,7 @@ export const NotificationProvider = ({ children }: NotificationProviderProps) =>
 
 	const markAllAsRead = useCallback(async () => {
 		try {
+			await apiService.put(`/notifications/readAll`, {});
 			setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
 			setUnreadCount(0);
 		} catch (error) {

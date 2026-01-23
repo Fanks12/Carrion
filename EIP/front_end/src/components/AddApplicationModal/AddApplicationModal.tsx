@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import styles from "./AddApplicationModal.module.css";
 
 type StatusKey =
-	| "APPLIED"
+	| "OFFER_ACCEPTED"
 	| "PENDING"
 	| "REJECTED_BY_COMPANY"
 	| "INTERVIEW_SCHEDULED"
@@ -40,7 +40,7 @@ export default function AddApplicationModal({
 	const { t } = useLanguage();
 
 	const [formData, setFormData] = useState<Partial<ApplicationFormData>>({
-		status: "APPLIED",
+		status: "PENDING",
 		contractType: "Full-time",
 	});
 

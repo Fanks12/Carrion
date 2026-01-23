@@ -12,7 +12,7 @@ async function getArchivedApplications() {
 		const token = cookieStore.get("access_token");
 
 		if (!token) {
-			redirect("/auth/signin");
+			redirect("/");
 		}
 
 		const headers = { Cookie: `${token.name}=${token.value}` };

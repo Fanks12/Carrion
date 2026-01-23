@@ -122,7 +122,7 @@ function OrganizationContent() {
 					organizationMemberInfo?.userRole === 'TEACHER') &&
 					organizationMemberInfo?.organizationId
 				) {
-					const statsRes = await ApiService.get<StatisticsData>(`/statistics/${viewingMember.user.id}`);
+					const statsRes = await ApiService.get<StatisticsData>(`/statistics/${viewingMember?.user.id}`);
 					setViewingMemberStats(statsRes);
 				}
 			} catch (error) {

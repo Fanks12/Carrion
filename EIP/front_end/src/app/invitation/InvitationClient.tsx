@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LandingHeader from "@/components/LandingHeader/LandingHeader";
 import { useAuthModal } from "@/contexts/AuthModalContext";
+import { Mail, ShieldAlert, AlertCircle, LogIn, UserPlus, ArrowRight, XCircle } from "lucide-react";
 
 interface InvitationDetails {
 	email: string;
@@ -32,7 +33,7 @@ function InvitationContent() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 	const { t } = useLanguage();
-	const { userProfile, loadingAuth } = useAuth();
+	const { userProfile, loadingAuth, organizationMemberInfo } = useAuth();
 
 	const { openAuthModal } = useAuthModal();
 
@@ -130,7 +131,9 @@ function InvitationContent() {
 				<LandingHeader forceVisible={true} />
 				<Toaster position="top-center" />
 				<div className={styles.card}>
-					<div className={`${styles.icon} ${styles.iconError}`}>⚠️</div>
+					<div className={`${styles.icon} ${styles.iconError}`}>
+						<XCircle size={40} />
+					</div>
 					<h1 className={styles.title}>{t("invitation.ui.invalidTitle")}</h1>
 					<p className={styles.description}>{t("invitation.ui.redirecting")}</p>
 				</div>
@@ -144,13 +147,16 @@ function InvitationContent() {
 				<LandingHeader forceVisible={true} />
 				<Toaster position="top-center" />
 				<div className={styles.card}>
-					<div className={`${styles.icon} ${styles.iconError}`}>🔒</div>
+					<div className={`${styles.icon} ${styles.iconError}`}>
+						<ShieldAlert size={40} />
+					</div>
 					<h1 className={styles.title}>Compte incorrect</h1>
 					<p className={styles.description}>
 						Cette invitation est pour <strong>{details.email}</strong>.<br />
 						Vous êtes connecté en tant que <strong>{userProfile.email}</strong>.
 					</p>
 					<button className={styles.secondaryButton} onClick={() => handleOpenAuth('login')}>
+						<LogIn size={18} style={{ marginRight: 8 }} />
 						Changer de compte
 					</button>
 				</div>
@@ -163,12 +169,29 @@ function InvitationContent() {
 			<LandingHeader forceVisible={true} />
 			<Toaster position="top-center" />
 			<div className={styles.card}>
-				<div className={styles.icon}>📬</div>
+				<div className={styles.icon}>
+					<Mail size={40} />
+				</div>
 				<h1 className={styles.title}>{t("invitation.ui.title")}</h1>
 				<div className={styles.content}>
 					<p><strong>{details?.inviter?.email}</strong> {t("invitation.ui.invitedBy")}</p>
 					<div className={styles.orgName}>{details?.organization?.name}</div>
 					<div className={styles.roleTag}>{t("invitation.ui.role")} {details?.role}</div>
+
+					{userProfile && organizationMemberInfo && (
+						<div className={styles.warningBox}>
+							<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+								<AlertCircle size={24} style={{ color: '#ef4444', flexShrink: 0 }} />
+								<div style={{ textAlign: 'left' }}>
+									<p style={{ margin: 0, fontWeight: 'bold' }}>{t("invitation.ui.warningTitle")}</p>
+									<p style={{ margin: 0, fontSize: '0.85rem' }}>
+										{t("invitation.ui.warningDescription", { org: details?.organization?.name ?? "" })}
+									</p>
+								</div>
+							</div>
+						</div>
+					)}
+
 					<p className={styles.instruction}>
 						{t("invitation.ui.reservedFor")}<br /><strong>{details?.email}</strong>
 					</p>
@@ -176,8 +199,13 @@ function InvitationContent() {
 				<div className={styles.actions}>
 					{userProfile ? (
 						<>
-							<button className={styles.primaryButton} onClick={handleAccept} disabled={isAccepting}>
+							<button
+								className={styles.primaryButton}
+								onClick={handleAccept}
+								disabled={isAccepting || !!organizationMemberInfo}
+							>
 								{isAccepting ? t("invitation.buttons.validating") : t("invitation.buttons.accept")}
+								{!isAccepting && <ArrowRight size={18} style={{ marginLeft: 8 }} />}
 							</button>
 							<button className={styles.secondaryButton} onClick={() => router.push("/dashboard")}>
 								{t("invitation.buttons.ignore")}
@@ -186,9 +214,11 @@ function InvitationContent() {
 					) : (
 						<>
 							<button className={styles.primaryButton} onClick={() => handleOpenAuth('register')}>
+								<UserPlus size={18} style={{ marginRight: 8 }} />
 								{t("invitation.buttons.createAccount")}
 							</button>
 							<button className={styles.outlineButton} onClick={() => handleOpenAuth('login')}>
+								<LogIn size={18} style={{ marginRight: 8 }} />
 								{t("invitation.buttons.login")}
 							</button>
 						</>

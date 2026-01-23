@@ -23,6 +23,7 @@ import { ConnectedService, UserProfile } from "@/interface/user.interface";
 import { SelectOption } from "@/interface/misc.interface";
 import styles from "./Profile.module.css";
 import Loading from "@/components/Loading/Loading";
+import { useRouter } from "next/navigation";
 
 registerLocale("fr", fr);
 
@@ -36,7 +37,7 @@ interface FlatProfile extends ProfileDetails {
 
 type ProfileInput = UserProfile | FlatProfile;
 
-type FormUserProfile = Omit<UserProfile, 'userProfile'> & {
+type FormUserProfile = Omit<UserProfile, 'userProfile' | 'subscription'> & {
 	userProfile: Omit<UserProfile['userProfile'], 'birthDate'> & {
 		birthDate?: Date | null;
 	};
@@ -48,6 +49,7 @@ interface ProfileClientProps {
 	initialCvUrl: string | null;
 	initialProfilePictureUrl: string | null;
 	error: string | null;
+	shouldRetry?: boolean;
 }
 
 function ProfileContent({
@@ -624,6 +626,22 @@ function ProfileContent({
 }
 
 export default function ProfileClient(props: ProfileClientProps) {
+	const router = useRouter();
+	const [isRetrying, setIsRetrying] = useState(props.shouldRetry);
+
+	useEffect(() => {
+		if (props.shouldRetry) {
+			console.log("Client: Token manquait au serveur, tentative de refresh...");
+			router.refresh();
+		} else {
+			setIsRetrying(false);
+		}
+	}, [props.shouldRetry, router]);
+
+	if (isRetrying) {
+		return <Loading />;
+	}
+
 	return (
 		<Suspense fallback={<Loading />}>
 			<ProfileContent {...props} />

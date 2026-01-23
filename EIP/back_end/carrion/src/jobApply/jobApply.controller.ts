@@ -190,4 +190,9 @@ export class JobApplyController {
     const userId = req.user.id;
     return this.jobApplyService.getAllArchivedJobApplies(userId);
   }
+
+  @Patch(':id/toggle-selection')
+  async toggleSelection(@Param('id') id: string, @Request() req) {
+    return this.jobApplyService.toggleSelection(id, req.user.id);
+  }
 }

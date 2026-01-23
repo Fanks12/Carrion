@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, FileText } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import apiService from "@/services/api";
 import ApplicationCard from "@/components/Card/Dashboardcard";
 import ApplicationList from "@/components/List/DashboardList";
@@ -24,30 +25,31 @@ export default function ArchivesClient({
 	error: initialError,
 }: ArchivesClientProps) {
 	const { t } = useLanguage();
-	const [applications, setApplications] =
-		useState<Application[]>(initialApplications);
+	const { userProfile } = useAuth();
+	const [applications, setApplications] = useState<Application[]>(initialApplications);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [viewMode] = useState<"grid" | "list">("grid");
 	const [sortBy, setSortBy] = useState<"date" | "status">("date");
-	const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(
-		new Set()
-	);
-	const [selectedApplication, setSelectedApplication] =
-		useState<Application | null>(null);
+	const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(new Set());
+	const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
 	const [popupType, setPopupType] = useState<"edit" | "details" | null>(null);
 
-	const statusMap = useMemo(
+	// Détermination du statut Premium
+	const isPremium = useMemo(() => {
+		const sub = userProfile?.subscription;
+		if (!sub) return false;
+		const isNotExpired = !sub.currentPeriodEnd || new Date(sub.currentPeriodEnd) > new Date();
+		return sub.status === "ACTIVE" && isNotExpired;
+	}, [userProfile]);
+
+	const statusMap: Record<ApplicationStatus, string> = useMemo(
 		() => ({
-			APPLIED: t("dashboard.statuses.APPLIED") as string,
-			PENDING: t("dashboard.statuses.PENDING") as string,
-			REJECTED_BY_COMPANY: t(
-				"dashboard.statuses.REJECTED_BY_COMPANY"
-			) as string,
-			INTERVIEW_SCHEDULED: t(
-				"dashboard.statuses.INTERVIEW_SCHEDULED"
-			) as string,
-			OFFER_RECEIVED: t("dashboard.statuses.OFFER_RECEIVED") as string,
-		}),
+			[ApplicationStatus.OFFER_ACCEPTED]: t("dashboard.statuses.ACCEPTED"),
+			[ApplicationStatus.PENDING]: t("dashboard.statuses.PENDING"),
+			[ApplicationStatus.REJECTED_BY_COMPANY]: t("dashboard.statuses.REJECTED_BY_COMPANY"),
+			[ApplicationStatus.INTERVIEW_SCHEDULED]: t("dashboard.statuses.INTERVIEW_SCHEDULED"),
+			[ApplicationStatus.OFFER_RECEIVED]: t("dashboard.statuses.OFFER"),
+		} as Record<ApplicationStatus, string>),
 		[t]
 	);
 
@@ -56,11 +58,22 @@ export default function ArchivesClient({
 		try {
 			const updatedApp = await apiService.put<Application>(
 				`/job_applies/${selectedApplication.id}/archived-status`,
-				selectedApplication
+				{
+					company: selectedApplication.company,
+					contractType: selectedApplication.contractType,
+					imageUrl: selectedApplication.imageUrl,
+					interviewDate: selectedApplication.interviewDate ? new Date(selectedApplication.interviewDate) : null,
+					location: selectedApplication.location,
+					salary: selectedApplication.salary,
+					status: selectedApplication.status,
+					title: selectedApplication.title,
+				}
 			);
-			setApplications((prev) =>
-				prev.map((app) => (app.id === updatedApp!.id ? updatedApp! : app))
-			);
+			if (updatedApp) {
+				setApplications((prev) =>
+					prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
+				);
+			}
 			closePopup();
 		} catch (err: unknown) {
 			console.error(t("dashboard.errors.updateError"), err);
@@ -108,23 +121,13 @@ export default function ArchivesClient({
 			)
 			.sort((a, b) => {
 				if (sortBy === "date")
-					return (
-						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-					);
-				if (sortBy === "status")
-					return statusMap[a.status].localeCompare(statusMap[b.status]);
-				return 0;
+					return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+				const statusA = statusMap[a.status as ApplicationStatus] || "";
+				const statusB = statusMap[b.status as ApplicationStatus] || "";
+				return statusA.localeCompare(statusB);
 			});
 	}, [applications, selectedStatuses, sortBy, searchTerm, statusMap]);
 
-	const openEditPopup = (application: Application) => {
-		setSelectedApplication(application);
-		setPopupType("edit");
-	};
-	const openDetailsPopup = (application: Application) => {
-		setSelectedApplication(application);
-		setPopupType("details");
-	};
 	const closePopup = () => {
 		setSelectedApplication(null);
 		setPopupType(null);
@@ -133,30 +136,22 @@ export default function ArchivesClient({
 	const stats = useMemo(
 		() => ({
 			total: applications.length,
-			pending: applications.filter((app) => app.status === "PENDING").length,
-			applied: applications.filter((app) => app.status === "APPLIED").length,
-			refused: applications.filter(
-				(app) => app.status === "REJECTED_BY_COMPANY"
-			).length,
+			pending: applications.filter((app) => app.status === ApplicationStatus.PENDING).length,
+			offerReceived: applications.filter((app) => app.status === ApplicationStatus.OFFER_RECEIVED).length,
+			refused: applications.filter((app) => app.status === ApplicationStatus.REJECTED_BY_COMPANY).length,
 		}),
 		[applications]
 	);
 
-	if (initialError) {
-		return (
-			<main className={styles.archivesErrorState}>
-				<p>{initialError}</p>
-			</main>
-		);
-	}
+	if (initialError) return <main className={styles.archivesErrorState}><p>{initialError}</p></main>;
 
 	return (
 		<main className={styles.archives}>
 			<div className={styles.container}>
 				<header className={styles.banner}>
 					<div className={styles.bannerContent}>
-						<h1 className={styles.bannerTitle}>{t("archives.title") as string}</h1>
-						<p className={styles.bannerText}>{t("archives.description") as string}</p>
+						<h1 className={styles.bannerTitle}>{t("archives.title")}</h1>
+						<p className={styles.bannerText}>{t("archives.description")}</p>
 					</div>
 					<div className={styles.searchContainer}>
 						<input
@@ -170,43 +165,29 @@ export default function ArchivesClient({
 					</div>
 				</header>
 
-				<section aria-labelledby="stats-title" className={styles.statsContainer}>
-					<h2 id="stats-title" className={styles.visuallyHidden}>
-						Statistiques des archives
-					</h2>
+				<section className={styles.statsContainer}>
 					<div className={styles.statCard}>
-						<h3 className={styles.statTitle}>{t("shared.stats.total") as string}</h3>
+						<h3 className={styles.statTitle}>{t("shared.stats.total")}</h3>
 						<p className={styles.statValue}>{stats.total}</p>
 					</div>
 					<div className={`${styles.statCard} ${styles.pending}`}>
-						<h3 className={styles.statTitle}>
-							{t("shared.stats.pending") as string}
-						</h3>
+						<h3 className={styles.statTitle}>{t("shared.stats.pending")}</h3>
 						<p className={styles.statValue}>{stats.pending}</p>
 					</div>
 					<div className={`${styles.statCard} ${styles.accepted}`}>
-						<h3 className={styles.statTitle}>
-							{t("shared.stats.accepted") as string}
-						</h3>
-						<p className={styles.statValue}>{stats.applied}</p>
+						<h3 className={styles.statTitle}>{t("shared.stats.accepted")}</h3>
+						<p className={styles.statValue}>{stats.offerReceived}</p>
 					</div>
 					<div className={`${styles.statCard} ${styles.refused}`}>
-						<h3 className={styles.statTitle}>
-							{t("shared.stats.refused") as string}
-						</h3>
+						<h3 className={styles.statTitle}>{t("shared.stats.refused")}</h3>
 						<p className={styles.statValue}>{stats.refused}</p>
 					</div>
 				</section>
 
-				<section aria-labelledby="controls-title" className={styles.archivesControls}>
-					<h2 id="controls-title" className={styles.visuallyHidden}>
-						Contrôles de filtrage et de tri
-					</h2>
+				<section className={styles.archivesControls}>
 					<div className={styles.filterContainer}>
-						{Object.keys(statusMap)
-							.filter((key) =>
-								["APPLIED", "PENDING", "REJECTED_BY_COMPANY"].includes(key)
-							)
+						{(Object.keys(statusMap) as ApplicationStatus[])
+							.filter((key) => ["OFFER_RECEIVED", "PENDING", "REJECTED_BY_COMPANY"].includes(key))
 							.map((statusKey) => (
 								<label key={statusKey} className={styles.filterCheckbox}>
 									<input
@@ -214,116 +195,73 @@ export default function ArchivesClient({
 										checked={selectedStatuses.has(statusKey)}
 										onChange={() => handleStatusChange(statusKey)}
 									/>
-									<span className={styles.checkboxLabel}>
-										{statusMap[statusKey as keyof typeof statusMap]}
-									</span>
+									<span className={styles.checkboxLabel}>{statusMap[statusKey]}</span>
 								</label>
 							))}
 					</div>
 					<div className={styles.controlsRight}>
-						<div className={styles.sortContainer}>
-							<label htmlFor="sort-select" className={styles.sortLabel}>
-								{t("shared.sorting.label") as string} :
-							</label>
-							<select
-								id="sort-select"
-								className={styles.sortSelect}
-								value={sortBy}
-								onChange={(e) => setSortBy(e.target.value as "date" | "status")}
-							>
-								<option value="date">
-									{t("shared.sorting.date") as string}
-								</option>
-								<option value="status">
-									{t("shared.sorting.status") as string}
-								</option>
-							</select>
-						</div>
+						<select
+							className={styles.sortSelect}
+							value={sortBy}
+							onChange={(e) => setSortBy(e.target.value as "date" | "status")}
+						>
+							<option value="date">{t("shared.sorting.date")}</option>
+							<option value="status">{t("shared.sorting.status")}</option>
+						</select>
 					</div>
 				</section>
 
-				<section aria-labelledby="applications-list-title">
-					<h2 id="applications-list-title" className={styles.visuallyHidden}>
-						Liste des candidatures archivées
-					</h2>
-					{viewMode === "grid" ? (
-						<div className={styles.applicationsGrid}>
-							{sortedAndFilteredApplications.length > 0 ? (
-								sortedAndFilteredApplications.map((app) => (
-									<ApplicationCard
-										key={app.id}
-										application={app as JobApply}
-										statusMap={statusMap as Record<ApplicationStatus, string>}
-										onEdit={openEditPopup as (application: JobApply) => void}
-										onArchive={handleUnarchiveApplication}
-										onDelete={handleDeleteApplication}
-										onDetails={
-											openDetailsPopup as (application: JobApply) => void
-										}
-									/>
-								))
+				<div className={viewMode === "grid" ? styles.applicationsGrid : styles.applicationsList}>
+					{sortedAndFilteredApplications.length > 0 ? (
+						sortedAndFilteredApplications.map((app) => (
+							viewMode === "grid" ? (
+								<ApplicationCard
+									key={app.id}
+									application={app as JobApply}
+									isPremium={isPremium}
+									statusMap={statusMap}
+									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
+									onArchive={handleUnarchiveApplication}
+									onDelete={handleDeleteApplication}
+									onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
+								/>
 							) : (
-								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>
-										<FileText size={48} />
-									</div>
-									<h3 className={styles.emptyTitle}>
-										{t("archives.empty.title") as string}
-									</h3>
-									<p className={styles.emptyText}>
-										{t("archives.empty.text") as string}
-									</p>
-								</div>
-							)}
-						</div>
+								<ApplicationList
+									key={app.id}
+									application={app as JobApply}
+									isPremium={isPremium}
+									statusMap={statusMap}
+									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
+									onArchive={handleUnarchiveApplication}
+									onDelete={handleDeleteApplication}
+									onDetails={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("details"); }}
+								/>
+							)
+						))
 					) : (
-						<div className={styles.applicationsList}>
-							{sortedAndFilteredApplications.length > 0 ? (
-								sortedAndFilteredApplications.map((app) => (
-									<ApplicationList
-										key={app.id}
-										application={app as JobApply}
-										statusMap={statusMap as Record<ApplicationStatus, string>}
-										onEdit={openEditPopup as (application: JobApply) => void}
-										onArchive={handleUnarchiveApplication}
-										onDelete={handleDeleteApplication}
-										onDetails={openDetailsPopup as (application: JobApply) => void}
-									/>
-								))
-							) : (
-								<div className={styles.emptyState}>
-									<div className={styles.emptyIcon}>
-										<FileText size={48} />
-									</div>
-									<h3 className={styles.emptyTitle}>
-										{t("archives.empty.title") as string}
-									</h3>
-									<p className={styles.emptyText}>
-										{t("archives.empty.text") as string}
-									</p>
-								</div>
-							)}
+						<div className={styles.emptyState}>
+							<FileText size={48} className={styles.emptyIcon} />
+							<h3 className={styles.emptyTitle}>{t("archives.empty.title")}</h3>
+							<p className={styles.emptyText}>{t("archives.empty.text")}</p>
 						</div>
 					)}
-				</section>
+				</div>
 			</div>
 
 			{popupType === "edit" && selectedApplication && (
 				<EditApplicationModal
-					application={selectedApplication as JobApply}
-					setApplication={
-						setSelectedApplication as (application: JobApply) => void
-					}
+					application={selectedApplication as unknown as JobApply}
+					setApplication={(app) => setSelectedApplication(app as unknown as Application)}
 					onUpdate={handleUpdateApplication}
 					onClose={closePopup}
-					statusMap={statusMap as Record<ApplicationStatus, string>}
+					statusMap={statusMap}
 				/>
 			)}
 			{popupType === "details" && selectedApplication && (
 				<DetailsModal
-					application={selectedApplication as JobApply}
+					application={selectedApplication as unknown as JobApply}
 					onClose={closePopup}
-					statusMap={statusMap as Record<ApplicationStatus, string>}
+					statusMap={statusMap}
 				/>
 			)}
 		</main>

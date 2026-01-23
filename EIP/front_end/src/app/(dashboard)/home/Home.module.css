@@ -807,7 +807,9 @@
   align-items: center;
   padding: 1rem 0.5rem;
   border-bottom: 1px solid #edf2f7;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -969,7 +971,7 @@
   white-space: nowrap;
 }
 
-.status.applied,
+.status.offer_received,
 .status.pending {
   background-color: #ebf8ff;
   color: #2b6cb0;

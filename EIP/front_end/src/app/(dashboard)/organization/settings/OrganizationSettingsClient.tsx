@@ -13,10 +13,16 @@ import Select from 'react-select';
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { InvitationListInterface, SettingsDataInterface } from "@/interface/organization.interface";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Mail, UserPlus, Trash2, Edit, AlertCircle, X, LogOut, ShieldCheck } from "lucide-react";
 
 interface SelectOption {
 	label: string;
 	value: string;
+}
+
+interface ApiErrorResponse {
+	status: number;
+	message: string;
 }
 
 const ITEMS_PER_PAGE = 6;
@@ -33,7 +39,7 @@ const getRoleBadgeClass = (role: string) => {
 function OrganizationSettingsContent() {
 	const router = useRouter();
 	const { t } = useLanguage();
-	const { organizationMemberInfo, checkAuthStatus } = useAuth();
+	const { organizationMemberInfo, checkAuthStatus, setOrganizationMemberInfo } = useAuth();
 	const [loading, setLoading] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
 	const [memberOptions, setMemberOptions] = useState<SelectOption[]>([]);
@@ -102,6 +108,7 @@ function OrganizationSettingsContent() {
 
 	const handleSaveOwner = async (e: React.FormEvent) => {
 		e.preventDefault();
+		if (!organizationMemberInfo) return;
 		if (!selectedNewOwner) {
 			toast.error(t("organization.error.owner.select") as string);
 			return;
@@ -113,6 +120,10 @@ function OrganizationSettingsContent() {
 				newOwnerId: selectedNewOwner.value
 			});
 			toast.success(t("organization.success.owner") as string);
+			setOrganizationMemberInfo({
+				...organizationMemberInfo,
+				userRole: OrganizationRole.TEACHER,
+			});
 			router.push('/organization');
 		} catch (error) {
 			console.error(error);
@@ -130,6 +141,7 @@ function OrganizationSettingsContent() {
 			});
 			toast.success(t("organization.success.leave") as string);
 			await checkAuthStatus();
+			setOrganizationMemberInfo(null);
 			router.refresh();
 			router.push('/dashboard');
 		} catch (error) {
@@ -206,16 +218,24 @@ function OrganizationSettingsContent() {
 		}
 		setIsSaving(true);
 		try {
-			await ApiService.post("/organization/invite", {
+			const response = await ApiService.post<ApiErrorResponse>("/organization/invite", {
 				organizationId: organizationMemberInfo?.organizationId,
 				email: newInviteEmail,
 				role: newInviteRole
 			});
 
+			if (response && response.status !== 201) {
+				const errorKey = `organization.error.${response.message}`;
+				const translatedResult = t(errorKey);
+				const message = translatedResult === errorKey ? t("organization.error.invite") : translatedResult;
+				toast.error(Array.isArray(message) ? message.join(' ') : message);
+				return;
+			}
+
 			toast.success(t("organization.success.invitationSent") as string);
 			window.location.reload();
-		} catch (error) {
-			console.error(error);
+		} catch (err: unknown) {
+			console.error(err);
 			toast.error(t("organization.error.invite") as string);
 		} finally {
 			setIsSaving(false);
@@ -254,9 +274,10 @@ function OrganizationSettingsContent() {
 							<h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, color: '#1f2937' }}>{t("organization.invitations.title")}</h2>
 							<button
 								className={styles.saveButton}
-								style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}
+								style={{ fontSize: '0.85rem', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '8px' }}
 								onClick={() => setIsInviteModalOpen(true)}
 							>
+								<UserPlus size={16} />
 								{t("organization.invitations.add")}
 							</button>
 						</div>
@@ -302,7 +323,7 @@ function OrganizationSettingsContent() {
 																		onClick={() => handleEditInviteClick(invite)}
 																		title={t("common.edit") as string}
 																	>
-																		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+																		<Edit size={14} />
 																		{t("common.edit")}
 																	</button>
 																	<button
@@ -310,7 +331,7 @@ function OrganizationSettingsContent() {
 																		onClick={() => handleRevokeClick(invite)}
 																		title={t("organization.actions.revoke") as string}
 																	>
-																		<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+																		<X size={14} />
 																		{t("organization.actions.revoke")}
 																	</button>
 																</>
@@ -395,7 +416,9 @@ function OrganizationSettingsContent() {
 									className={styles.dangerButton}
 									onClick={() => setIsLeaveModalOpen(true)}
 									disabled={isSaving}
+									style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
 								>
+									<LogOut size={18} />
 									{t("organization.dangerZone.leaveButton")}
 								</button>
 							</div>
@@ -411,13 +434,17 @@ function OrganizationSettingsContent() {
 						<p className={styles.modalDescription}>{t("organization.modals.invite.description")}</p>
 						<div className={styles.formGroup}>
 							<label className={styles.label}>{t("common.email")}</label>
-							<input
-								type="email"
-								className={styles.input}
-								placeholder="exemple@email.com"
-								value={newInviteEmail}
-								onChange={(e) => setNewInviteEmail(e.target.value)}
-							/>
+							<div style={{ position: 'relative' }}>
+								<input
+									type="email"
+									className={styles.input}
+									placeholder="exemple@email.com"
+									value={newInviteEmail}
+									onChange={(e) => setNewInviteEmail(e.target.value)}
+									style={{ paddingLeft: '40px' }}
+								/>
+								<Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
+							</div>
 						</div>
 						<div className={styles.formGroup}>
 							<label className={styles.label}>{t("organization.table.role")}</label>
@@ -447,7 +474,10 @@ function OrganizationSettingsContent() {
 			{revokingInvite && (
 				<div className={styles.modalOverlay} onClick={() => setRevokingInvite(null)}>
 					<div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-						<h3 className={styles.modalTitle} style={{ color: '#dc2626' }}>{t("organization.modals.revoke.title")}</h3>
+						<h3 className={styles.modalTitle} style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '10px' }}>
+							<AlertCircle size={24} />
+							{t("organization.modals.revoke.title")}
+						</h3>
 						<p style={{ marginBottom: '1.5rem', color: '#4b5563' }}>
 							{t("organization.modals.revoke.confirm", { email: revokingInvite.email })}
 						</p>
@@ -455,7 +485,8 @@ function OrganizationSettingsContent() {
 							<button className={styles.cancelButton} onClick={() => setRevokingInvite(null)} disabled={isSaving}>
 								{t("common.cancel")}
 							</button>
-							<button className={styles.dangerButton} onClick={handleConfirmRevoke} disabled={isSaving}>
+							<button className={styles.dangerButton} onClick={handleConfirmRevoke} disabled={isSaving} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+								<Trash2 size={16} />
 								{isSaving ? t("common.processing") : t("organization.actions.revoke")}
 							</button>
 						</div>
@@ -466,7 +497,10 @@ function OrganizationSettingsContent() {
 			{isLeaveModalOpen && (
 				<div className={styles.modalOverlay} onClick={() => setIsLeaveModalOpen(false)}>
 					<div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-						<h3 className={styles.modalTitle} style={{ color: '#dc2626' }}>{t("organization.modals.leave.title")}</h3>
+						<h3 className={styles.modalTitle} style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '10px' }}>
+							<AlertCircle size={24} />
+							{t("organization.modals.leave.title")}
+						</h3>
 						<p style={{ marginBottom: '1.5rem', color: '#4b5563' }}>
 							{t("organization.modals.leave.confirm")}
 						</p>
@@ -485,7 +519,10 @@ function OrganizationSettingsContent() {
 			{editingInvite && (
 				<div className={styles.modalOverlay} onClick={() => setEditingInvite(null)}>
 					<div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-						<h3 className={styles.modalTitle}>{t("organization.modals.editRole.title")}</h3>
+						<h3 className={styles.modalTitle} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+							<ShieldCheck size={24} />
+							{t("organization.modals.editRole.title")}
+						</h3>
 						<div className={styles.formGroup}>
 							<label className={styles.label}>{t("organization.modals.editRole.newRole")}</label>
 							<select className={styles.selectInput} value={selectedInviteRole} onChange={(e) => setSelectedInviteRole(e.target.value)}>

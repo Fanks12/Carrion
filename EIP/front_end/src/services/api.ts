@@ -32,7 +32,7 @@ class ApiService {
   }
 
   private async handleTokenRefresh(
-    originalRequest: () => Promise<Response>
+    originalRequest: () => Promise<Response>,
   ): Promise<Response> {
     if (this.isRefreshing) {
       return new Promise((resolve) => {
@@ -51,7 +51,7 @@ class ApiService {
 
       if (refreshResponse.ok) {
         await Promise.all(
-          this.refreshSubscribers.map((callback) => callback())
+          this.refreshSubscribers.map((callback) => callback()),
         );
         this.refreshSubscribers = [];
         return await originalRequest();
@@ -69,7 +69,7 @@ class ApiService {
 
   public async request(
     url: string,
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<Response> {
     const fullUrl = `${this.getBaseUrl()}${url}`;
     const defaultOptions: ApiOptions = {
@@ -90,14 +90,14 @@ class ApiService {
         }
 
         return this.handleTokenRefresh(() =>
-          this.request(url, { ...options, isRetry: true })
+          this.request(url, { ...options, isRetry: true }),
         );
       }
       return response;
     } catch (error) {
       if (error instanceof TypeError && error.message.includes("fetch")) {
         throw new Error(
-          `Network error: Unable to reach server at ${fullUrl}. Please check if the backend is running.`
+          `Network error: Unable to reach server at ${fullUrl}. Please check if the backend is running.`,
         );
       }
       throw error;
@@ -131,7 +131,7 @@ class ApiService {
     } catch (e) {
       console.warn(
         `[API] Warning: Failed to parse JSON from ${response.url}`,
-        e
+        e,
       );
       return null;
     }
@@ -139,7 +139,7 @@ class ApiService {
 
   public async get<T>(
     url: string,
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<T | null> {
     try {
       const response = await this.request(url, { method: "GET", ...options });
@@ -163,7 +163,7 @@ class ApiService {
   public async post<T>(
     url: string,
     data: unknown = {},
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<T | null> {
     try {
       const response = await this.request(url, {
@@ -184,7 +184,7 @@ class ApiService {
   public async put<T>(
     url: string,
     data: unknown,
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<T | null> {
     try {
       const response = await this.request(url, {
@@ -205,7 +205,7 @@ class ApiService {
   public async patch<T>(
     url: string,
     data: unknown,
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<T | null> {
     try {
       const response = await this.request(url, {
@@ -218,15 +218,14 @@ class ApiService {
       if (error instanceof Error && error.message === "Token refresh failed") {
         return null;
       }
-      console.error(`PATCH ${url} failed:`, error);
-      return null;
+      throw error;
     }
   }
 
   public async delete<T>(
     url: string,
     data: unknown = {},
-    options: ApiOptions = {}
+    options: ApiOptions = {},
   ): Promise<T | null> {
     try {
       const response = await this.request(url, {
@@ -239,8 +238,7 @@ class ApiService {
       if (error instanceof Error && error.message === "Token refresh failed") {
         return null;
       }
-      console.error(`DELETE ${url} failed:`, error);
-      return null;
+      throw error;
     }
   }
 

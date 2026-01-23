@@ -1,6 +1,6 @@
+// app/(dashboard)/profile/page.tsx
 import { Suspense } from "react";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import ApiService from "@/services/api";
 import ProfileClient from "./ProfileClient";
 import Loading from "@/components/Loading/Loading";
@@ -13,10 +13,17 @@ async function getProfileData() {
 	const token = cookieStore.get("access_token");
 
 	if (!token) {
-		redirect("/auth/signin");
+		return {
+			initialProfile: null,
+			initialServices: [],
+			initialCvUrl: null,
+			initialProfilePictureUrl: null,
+			error: null,
+			shouldRetry: true,
+		};
 	}
 
-	const headers = { Cookie: `${token.name}=${token.value}` };
+	const headers = { Cookie: cookieStore.toString() };
 
 	try {
 		const [profileRes, servicesRes, cvUrlRes, profilePicRes] =
@@ -40,22 +47,16 @@ async function getProfileData() {
 			initialCvUrl: cvUrlRes?.signedUrl || null,
 			initialProfilePictureUrl: profilePicRes?.signedUrl || null,
 			error: null,
+			shouldRetry: false,
 		};
 	} catch (error: unknown) {
-		if ((error as { digest?: string })?.digest?.startsWith("NEXT_REDIRECT")) {
-			throw error;
-		}
-
-		const errorMessage =
-			error instanceof Error
-				? error.message
-				: "Impossible de charger le profil.";
 		return {
 			initialProfile: null,
 			initialServices: [],
 			initialCvUrl: null,
 			initialProfilePictureUrl: null,
-			error: errorMessage,
+			error: null,
+			shouldRetry: true,
 		};
 	}
 }
