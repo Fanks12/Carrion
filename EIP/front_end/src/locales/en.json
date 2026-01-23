@@ -661,7 +661,7 @@
       "goToButton": "Go to my position"
     },
     "search": {
-      "placeholder": "Search by name or email...",
+      "placeholder": "Search by name...",
       "results": "Search results"
     },
     "friends": {
@@ -1042,5 +1042,12 @@
       "errorSubmit": "An error occurred during submission.",
       "errorUnknown": "An unknown error occurred."
     }
+  },
+  "emailVerif": {
+    "title": "Check your email",
+    "description": "A confirmation link has been sent to {{email}}.",
+    "info": "Please click on it to activate your account before signing in.",
+    "spam": "This may take a few minutes. Please check your spam folder if you haven't received anything.",
+    "back": "Back to signin"
   }
 }

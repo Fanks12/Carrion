@@ -855,6 +855,7 @@
 @media (max-width: 1024px) {
   .carrionStatistics .chartsGrid {
     grid-template-columns: 1fr;
+    min-width: 0;
   }
 
   .carrionStatistics .statusChartWrapper {
@@ -894,9 +895,16 @@
     gap: 16px;
   }
 
+  .carrionStatistics .chartsGrid {
+    grid-template-columns: 1fr;
+    min-width: 0;
+  }
+
   .carrionStatistics .chartCard {
     min-height: 320px;
     padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .carrionStatistics .kpiCard {
@@ -942,7 +950,7 @@
     gap: 16px;
   }
 
-  .carrionStatistics .goalStatItem .SatIbel {
+  .carrionStatistics .goalStatItem .statLabel {
     font-size: 0.65rem;
     letter-spacing: 0.2px;
     line-height: 1.1;
@@ -1015,40 +1023,100 @@
 }
 
 @media (max-width: 480px) {
+  .carrionStatistics {
+    padding: 12px;
+  }
+
   .carrionStatistics .kpiGrid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
 
-  .carrionStatistics .timeRangeSelector,
-  .carrionStatistics .goalTypeSelector {
-    flex-direction: column;
-    gap: 8px;
+  .carrionStatistics .kpiCard {
+    padding: 16px 14px;
+  }
+
+  .carrionStatistics .kpiValue {
+    font-size: 1.5rem;
+  }
+
+  .carrionStatistics .kpiLabel {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .carrionStatistics .chartsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .carrionStatistics .chartCard {
+    padding: 16px;
+    min-height: 300px;
   }
 
   .carrionStatistics .chartHeader {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 12px;
-    padding: 16px;
+    padding: 0;
+    margin-bottom: 16px;
   }
 
-  .carrionStatistics .kpiLabel {
+  .carrionStatistics .chartHeader h3 {
+    font-size: 1rem;
+  }
+
+  .carrionStatistics .timeRangeSelector,
+  .carrionStatistics .goalTypeSelector {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .carrionStatistics .timeRangeSelector button,
+  .carrionStatistics .goalTypeSelector button {
+    flex: 1;
+    padding: 10px 12px;
     font-size: 0.8rem;
+    min-width: calc(50% - 4px);
+  }
+
+  .carrionStatistics .chartContainer {
+    height: 240px;
   }
 
   .carrionStatistics .insightLabel,
-  .carrionStatistics .modalOverlay h3 {
-    font-size: 0.9rem;
+  .carrionStatistics .comparisonLabel,
+  .carrionStatistics .statLabel {
+    font-size: 0.85rem;
   }
 
-  .carrionStatistics .legendText {
-    font-size: 0.75rem;
+  .carrionStatistics .insightValue,
+  .carrionStatistics .comparisonValue,
+  .carrionStatistics .statValue {
+    font-size: 0.95rem;
   }
 
   .carrionStatistics .progressCircleContainer {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
+  }
+
+  .carrionStatistics .progressPercentage {
+    font-size: 1.5rem;
+  }
+
+  .carrionStatistics .goalMainInfo .goalTitle {
+    font-size: 1.25rem;
+  }
+
+  .carrionStatistics .goalMainInfo .goalSubtitle {
+    font-size: 0.85rem;
+  }
+
+  .carrionStatistics .goalMainInfo .timeRemaining {
+    font-size: 0.8rem;
+    padding: 6px 10px;
   }
 
   .carrionStatistics .goalStatsRow {
@@ -1056,26 +1124,40 @@
     gap: 16px;
   }
 
-  .carrionStatistics .goalStatItem .SatIbel {
-    font-size: 0.65rem;
-    letter-spacing: 0.2px;
-    line-height: 1.1;
+  .carrionStatistics .goalStatItem {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 16px;
+    max-width: 100%;
+    background: #f8fafc;
+    border-radius: 8px;
+  }
+
+  .carrionStatistics .goalStatItem .statNumber {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .carrionStatistics .goalStatItem .statLabel {
+    font-size: 0.75rem;
+    text-align: right;
   }
 
   .carrionStatistics .statusChartWrapper {
-    grid-template-columns: 1fr;
     gap: 16px;
     text-align: center;
+    min-height: 260px;
+    padding: 8px;
   }
 
   .carrionStatistics .doughnutContainer {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     margin: 0 auto;
   }
 
   .carrionStatistics .centerTotal {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .carrionStatistics .centerLabel {
@@ -1084,69 +1166,186 @@
 
   .carrionStatistics .statusLegendCarousel {
     max-width: 100%;
+    padding: 8px;
+  }
+
+  .carrionStatistics .carouselContainer {
+    margin: 0 32px;
+    max-width: calc(100% - 64px);
+  }
+
+  .carrionStatistics .carouselPage {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .carrionStatistics .carouselStatusCard {
+    padding: 12px;
+    min-height: 70px;
+  }
+
+  .carrionStatistics .carouselStatusCardSingle {
+    padding: 14px;
+    min-height: 75px;
+    gap: 8px;
+  }
+
+  .carrionStatistics .statusName {
+    font-size: 0.8rem;
+  }
+
+  .carrionStatistics .countBadge,
+  .carrionStatistics .percentageBadge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .carrionStatistics .carouselNavBtn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .carrionStatistics .carouselNavBtn.prev {
+    left: 2px;
+  }
+
+  .carrionStatistics .carouselNavBtn.next {
+    right: 2px;
+  }
+
+  .carrionStatistics .carouselIndicators {
+    margin-top: 12px;
+    gap: 6px;
+  }
+
+  .carrionStatistics .carouselDot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .carrionStatistics .carouselAutoplay {
+    top: 6px;
+    right: 6px;
+    padding: 3px 6px;
+    font-size: 0.65rem;
+  }
+
+  .carrionStatistics .performanceInsights,
+  .carrionStatistics .weeklyComparison,
+  .carrionStatistics .advancedStats {
+    gap: 8px;
+  }
+
+  .carrionStatistics .insightItem,
+  .carrionStatistics .comparisonItem,
+  .carrionStatistics .statRow {
+    padding: 12px 14px;
+  }
+
+  .carrionStatistics .emptyState {
+    padding: 32px 16px;
+    min-height: 220px;
+  }
+
+  .carrionStatistics .emptyStateIcon {
+    font-size: 3rem;
+  }
+
+  .carrionStatistics .emptyState p {
+    font-size: 1.1rem;
+  }
+
+  .carrionStatistics .emptyState small {
+    font-size: 0.85rem;
+  }
+
+  .carrionStatistics .statusChartNoData {
+    padding: 32px 16px;
+    min-height: 220px;
+  }
+
+  .carrionStatistics .statusChartNoData .noDataIcon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .carrionStatistics .statusChartNoData h3 {
+    font-size: 1rem;
+  }
+
+  .carrionStatistics .statusChartNoData p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .carrionStatistics {
     padding: 10px;
+  }
+
+  .carrionStatistics .kpiCard {
+    padding: 14px 12px;
+  }
+
+  .carrionStatistics .kpiValue {
+    font-size: 1.3rem;
+  }
+
+  .carrionStatistics .kpiLabel {
+    font-size: 0.7rem;
+  }
+
+  .carrionStatistics .chartCard {
+    padding: 14px;
+  }
+
+  .carrionStatistics .chartHeader h3 {
+    font-size: 0.95rem;
+  }
+
+  .carrionStatistics .timeRangeSelector button,
+  .carrionStatistics .goalTypeSelector button {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .carrionStatistics .progressCircleContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .carrionStatistics .progressPercentage {
+    font-size: 1.3rem;
+  }
+
+  .carrionStatistics .goalMainInfo .goalTitle {
+    font-size: 1.1rem;
+  }
+
+  .carrionStatistics .goalMainInfo .goalSubtitle {
+    font-size: 0.8rem;
+  }
+
+  .carrionStatistics .doughnutContainer {
+    width: 120px;
+    height: 120px;
+  }
+
+  .carrionStatistics .centerTotal {
+    font-size: 1.5rem;
   }
 
   .carrionStatistics .carouselContainer {
     margin: 0 28px;
   }
 
-  .carrionStatistics .carouselPage {
-    grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 4px;
-  }
-
-  .carrionStatistics .carouselStatusCard {
-    padding: 8px;
-    min-height: 60px;
-  }
-
-  .carrionStatistics .carouselStatusCardSingle {
-    padding: 12px;
-    min-height: 70px;
-    gap: 8px;
-  }
-
-  .carrionStatistics .statusName {
-    font-size: 0.75rem;
-  }
-
-  .carrionStatistics .countBadge,
-  .carrionStatistics .percentageBadge {
-    font-size: 0.65rem;
-    padding: 2px 6px;
-  }
-
   .carrionStatistics .carouselNavBtn {
     width: 24px;
     height: 24px;
     font-size: 12px;
-  }
-
-  .carrionStatistics .carouselNavBtn.prev {
-    left: 4px;
-  }
-
-  .carrionStatistics .carouselNavBtn.next {
-    right: 4px;
-  }
-
-  .carrionStatistics .carouselIndicators {
-    margin-top: 8px;
-    gap: 4px;
-  }
-
-  .carrionStatistics .carouselDot {
-    width: 6px;
-    height: 6px;
-  }
-
-  .carrionStatistics .carouselAutoplay {
-    top: 4px;
-    right: 4px;
-    padding: 2px 4px;
-    font-size: 0.6rem;
   }
 }
 

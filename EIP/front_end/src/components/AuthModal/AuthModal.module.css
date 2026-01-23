@@ -22,6 +22,50 @@
   overflow: hidden;
 }
 
+@media (max-width: 1200px) {
+  .authModal {
+    width: 650px;
+    padding: 2.75rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .authModal {
+    width: 600px;
+    padding: 2.5rem;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .authModal {
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (max-width: 576px) {
+  .authModal {
+    width: 95%;
+    max-width: 400px;
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 350px) {
+  .authModal {
+    width: 98%;
+    max-width: 95%;
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+}
+
 .closeButton {
   position: absolute;
   top: 12px;
@@ -34,15 +78,82 @@
   height: 40px;
 }
 
+@media (max-width: 768px) {
+  .closeButton {
+    top: 10px;
+    right: 12px;
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 576px) {
+  .closeButton {
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 10px;
+  }
+}
+
 .authModal h1 {
   text-align: center;
   margin-bottom: 2rem;
+  font-size: 1.75rem;
+}
+
+@media (max-width: 992px) {
+  .authModal h1 {
+    font-size: 1.6rem;
+    margin-bottom: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .authModal h1 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .authModal h1 {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .authModal h1 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .tabs {
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+}
+
+@media (max-width: 992px) {
+  .tabs {
+    margin-bottom: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    margin-bottom: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tabs {
+    margin-bottom: 0.6rem;
+  }
 }
 
 .tabs button {
@@ -53,6 +164,27 @@
   cursor: pointer;
   border-bottom: 3px solid transparent;
   transition: all 0.2s ease;
+}
+
+@media (max-width: 992px) {
+  .tabs button {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .tabs button {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
 }
 
 .tabs button.active {
@@ -67,6 +199,28 @@
 
 .authModal label {
   margin-top: 25px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 992px) {
+  .authModal label {
+    margin-top: 22px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .authModal label {
+    margin-top: 18px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .authModal label {
+    margin-top: 15px;
+    font-size: 0.8rem;
+  }
 }
 
 .authModal input {
@@ -75,6 +229,38 @@
   border-radius: 10px;
   font-size: 1rem;
   margin-top: 5px;
+}
+
+@media (max-width: 992px) {
+  .authModal input {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .authModal input {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .authModal input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 350px) {
+  .authModal input {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.8rem;
+  }
 }
 
 .authModal .primaryBtn {
@@ -89,11 +275,78 @@
   width: 50%;
 }
 
+@media (max-width: 992px) {
+  .authModal .primaryBtn {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+    margin: 22px auto;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .authModal .primaryBtn {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+    margin: 20px auto;
+    width: 60%;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .authModal .primaryBtn {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    margin: 18px auto;
+    width: 70%;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 350px) {
+  .authModal .primaryBtn {
+    padding: 0.55rem;
+    font-size: 0.8rem;
+    margin: 15px auto;
+    width: 80%;
+  }
+}
+
 .socialButtons {
   display: flex;
   flex-direction: row;
   gap: 0.75rem;
   margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+  .socialButtons {
+    gap: 0.65rem;
+    margin-top: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .socialButtons {
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .socialButtons {
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .socialButtons {
+    margin-top: 1rem;
+    gap: 0.4rem;
+  }
 }
 
 .socialButtons button {
@@ -105,6 +358,21 @@
   border-radius: 10px;
   cursor: pointer;
   border: none;
+}
+
+@media (max-width: 768px) {
+  .socialButtons button {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .socialButtons button {
+    padding: 0.65rem;
+    font-size: 0.85rem;
+  }
 }
 
 .googleLoginButton {
@@ -121,6 +389,18 @@
   width: 20px;
 }
 
+@media (max-width: 768px) {
+  .googleLoginButton img {
+    width: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .googleLoginButton img {
+    width: 16px;
+  }
+}
+
 .outlookLoginButton {
   background-color: var(--outlook-button-color);
   border: 1px solid #d1d1d1;
@@ -135,6 +415,19 @@
 .rowInputs {
   display: flex;
   gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .rowInputs {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .rowInputs {
+    gap: 0.6rem;
+  }
 }
 
 .rowInputs div {
@@ -157,6 +450,31 @@
   padding: 12px;
   margin: 15px 0;
   text-align: center;
+}
+
+@media (max-width: 992px) {
+  .errorMessage {
+    font-size: 0.85rem;
+    padding: 10px;
+    margin: 12px 0;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .errorMessage {
+    font-size: 0.8rem;
+    padding: 10px;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .errorMessage {
+    font-size: 0.75rem;
+    padding: 8px;
+    margin: 8px 0;
+  }
 }
 
 .passwordWrapper {
@@ -197,6 +515,30 @@
   font-size: 0.85rem;
 }
 
+@media (max-width: 992px) {
+  .passwordCriteria {
+    gap: 6px 14px;
+    font-size: 0.8rem;
+    margin: 12px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .passwordCriteria {
+    gap: 5px 12px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .passwordCriteria {
+    grid-template-columns: 1fr;
+    gap: 4px 8px;
+    font-size: 0.7rem;
+    margin: 10px 0;
+  }
+}
+
 .valid {
   color: #4caf50;
 }
@@ -212,10 +554,38 @@
   margin-top: 1rem;
 }
 
+@media (max-width: 768px) {
+  .loginOptions {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: flex-start;
+    margin-top: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .loginOptions {
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+}
+
 .rememberMeWrapper {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .rememberMeWrapper {
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .rememberMeWrapper {
+    gap: 0.3rem;
+  }
 }
 
 .rememberMeWrapper input[type="checkbox"] {
@@ -225,12 +595,37 @@
 .rememberMeWrapper label {
   margin-top: 0;
   cursor: pointer;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .rememberMeWrapper label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .rememberMeWrapper label {
+    font-size: 0.75rem;
+  }
 }
 
 .forgotPasswordLink {
   font-size: 0.9rem;
   color: #132238;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .forgotPasswordLink {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .forgotPasswordLink {
+    font-size: 0.75rem;
+  }
 }
 
 .forgotPasswordLink:hover {
@@ -265,4 +660,29 @@
   padding: 12px;
   margin: 15px 0;
   text-align: center;
+}
+
+@media (max-width: 992px) {
+  .successMessage {
+    font-size: 0.9rem;
+    padding: 10px;
+    margin: 12px 0;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .successMessage {
+    font-size: 0.85rem;
+    padding: 10px;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .successMessage {
+    font-size: 0.8rem;
+    padding: 8px;
+    margin: 8px 0;
+  }
 }

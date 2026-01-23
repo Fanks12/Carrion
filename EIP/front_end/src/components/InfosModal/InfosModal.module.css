@@ -37,6 +37,39 @@
   position: relative;
 }
 
+@media (max-width: 992px) {
+  .infosModal {
+    padding: 1.75rem 2.5rem;
+    max-width: 700px;
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .infosModal {
+    padding: 1.5rem 2rem;
+    max-width: 90%;
+    width: 95%;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .infosModal {
+    padding: 1.25rem 1.5rem;
+    max-width: 95%;
+    width: 100%;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  .infosModal {
+    padding: 1rem 1.25rem;
+    max-width: 98%;
+  }
+}
+
 .infosModal h1 {
   padding: 1.5rem 2rem;
   margin: 0;
@@ -47,6 +80,31 @@
   background-color: #ffffff;
   text-align: left;
   border-bottom: 1px solid #f1f5f9;
+}
+
+@media (max-width: 992px) {
+  .infosModal h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .infosModal h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .infosModal h1 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .infosModal h1 {
+    font-size: 1.1rem;
+  }
 }
 
 .infosModal hr {
@@ -78,8 +136,100 @@
   gap: 0.5rem;
 }
 
+@media (max-width: 992px) {
+  .infosModal .infoForm {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .infosModal .infoForm {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .infosModal .infoForm {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .infosModal .infoForm {
+    gap: 0.8rem;
+  }
+}
+
+.infosModal .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .formGroup label {
   font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .infosModal .formGroup {
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .infosModal .formGroup {
+    gap: 0.3rem;
+  }
+}
+
+.infosModal .formGroup label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+@media (max-width: 992px) {
+  .infosModal .formGroup label {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .infosModal .formGroup label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .infosModal .formGroup label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .infosModal .formGroup label {
+    font-size: 0.7rem;
+  }
+}
+
+.infosModal .buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+.infosModal .primaryBtn,
+.infosModal .secondaryBtn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
   font-weight: 600;
   color: #475569;
   display: flex;
@@ -136,10 +286,61 @@
   gap: 1.5rem 2rem;
 }
 
+@media (max-width: 992px) {
+  .formGrid {
+    gap: 1.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .formGrid {
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .formGrid {
+    gap: 0.6rem;
+  }
+}
 .radioGroup {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
+}
+
+@media (max-width: 992px) {
+  .radioGroup {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .radioGroup {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .radioGroup {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .radioGroup {
+    gap: 0.6rem;
+  }
 }
 
 .radioGroup label {
@@ -162,6 +363,34 @@
   background-color: #f8fafc;
 }
 
+@media (max-width: 992px) {
+  .radioGroup label {
+    padding: 0.9rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .radioGroup label {
+    padding: 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .radioGroup label {
+    padding: 0.7rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .radioGroup label {
+    padding: 0.6rem;
+    font-size: 0.7rem;
+  }
+}
 .radioGroup label:has(input:checked) {
   border-color: #3b82f6;
   background-color: #eff6ff;

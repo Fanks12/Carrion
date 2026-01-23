@@ -280,24 +280,44 @@
 }
 
 @media (max-width: 1024px) {
+  .settingsContainer {
+    max-width: 100%;
+    margin: 32px auto;
+    padding: 24px 32px;
+  }
+
+  .settingsHeader h1 {
+    font-size: 1.9rem;
+  }
+
+  .settingsContent {
+    gap: 32px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.35rem;
+  }
+
+  .formGrid {
+    gap: 20px;
+  }
 }
 
 @media (max-width: 768px) {
   .settingsContainer {
-    padding: 16px;
-  }
-
-  .settingsHeader {
-    padding: 24px 20px;
-    margin-bottom: 24px;
+    padding: 16px 20px;
   }
 
   .settingsHeader h1 {
-    font-size: 1.875rem;
+    font-size: 1.75rem;
+  }
+
+  .settingsHeader p {
+    font-size: 0.95rem;
   }
 
   .settingsSection {
-    padding: 20px 0;
+    padding: 24px 0;
   }
 
   .formGrid {
@@ -306,45 +326,92 @@
   }
 
   .formActions {
-    justify-content: stretch;
+    justify-content: center;
   }
 
   .btnPrimary {
     width: 100%;
-    padding: 16px 24px;
+    padding: 16px;
   }
 
-  .sectionHeader h2 {
-    font-size: 1.25rem;
+  .accountActions {
+    gap: 20px;
+  }
+
+  .actionItem {
+    align-items: flex-start;
   }
 }
 
 @media (max-width: 480px) {
   .settingsContainer {
-    padding: 12px;
+    margin: 20px auto;
+    padding: 16px;
   }
 
   .settingsHeader {
-    padding: 20px 16px;
+    margin-bottom: 20px;
   }
 
   .settingsHeader h1 {
-    font-size: 1.625rem;
+    font-size: 1.6rem;
+  }
+
+  .settingsContent {
+    gap: 28px;
   }
 
   .settingsSection {
-    padding: 16px 0;
+    padding-bottom: 20px;
+  }
+
+  .actionItem {
+    gap: 12px;
+  }
+
+  .actionDescription {
+    font-size: 0.85rem;
   }
 
   .featureComingSoon {
-    padding: 32px 20px;
+    padding: 24px 16px;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .settingsContainer {
+    margin: 16px auto;
+    padding: 12px;
+    border-radius: 10px;
   }
 
-  .comingSoonIcon {
-    font-size: 3rem;
+  .settingsHeader h1 {
+    font-size: 1.4rem;
+  }
+
+  .settingsHeader p {
+    font-size: 0.9rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.1rem;
+  }
+
+  .actionItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btnSecondary,
+  .btnDanger,
+  .btnPrimary {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95rem;
   }
 
   .formGroup input {
-    padding: 12px 14px;
+    font-size: 0.95rem;
   }
 }
