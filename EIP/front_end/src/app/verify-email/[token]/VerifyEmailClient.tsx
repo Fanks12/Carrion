@@ -22,12 +22,11 @@ export default function VerifyEmailClient() {
 	const router = useRouter();
 	const { token } = useParams();
 	const { t } = useLanguage();
-	const effectRan = useRef(false);
 	const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
 	const [errorKey, setErrorKey] = useState<string>("auth.invalidLinkMessage");
 
 	useEffect(() => {
-		if (effectRan.current === true) return;
+		const controller = new AbortController();
 
 		if (!token) {
 			setStatus("error");
@@ -37,11 +36,9 @@ export default function VerifyEmailClient() {
 
 		const verifyToken = async () => {
 			try {
-				const response = await apiService.get(`/auth/verify-email/${token}`);
-
-				if (!response) {
-					throw new Error("Empty_Response");
-				}
+				await apiService.get(`/auth/verify-email/${token}`, {
+					signal: controller.signal
+				});
 
 				setStatus("success");
 			} catch (err: unknown) {
@@ -66,7 +63,7 @@ export default function VerifyEmailClient() {
 		verifyToken();
 
 		return () => {
-			effectRan.current = true;
+			controller.abort();
 		};
 	}, [token]);
 
