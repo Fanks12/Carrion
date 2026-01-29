@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from "react";
 import { Search, FileText } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
 import apiService from "@/services/api";
 import ApplicationCard from "@/components/Card/Dashboardcard";
 import ApplicationList from "@/components/List/DashboardList";
@@ -25,7 +24,6 @@ export default function ArchivesClient({
 	error: initialError,
 }: ArchivesClientProps) {
 	const { t } = useLanguage();
-	const { userProfile } = useAuth();
 	const [applications, setApplications] = useState<Application[]>(initialApplications);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [viewMode] = useState<"grid" | "list">("grid");
@@ -33,14 +31,6 @@ export default function ArchivesClient({
 	const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(new Set());
 	const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
 	const [popupType, setPopupType] = useState<"edit" | "details" | null>(null);
-
-	// Détermination du statut Premium
-	const isPremium = useMemo(() => {
-		const sub = userProfile?.subscription;
-		if (!sub) return false;
-		const isNotExpired = !sub.currentPeriodEnd || new Date(sub.currentPeriodEnd) > new Date();
-		return sub.status === "ACTIVE" && isNotExpired;
-	}, [userProfile]);
 
 	const statusMap: Record<ApplicationStatus, string> = useMemo(
 		() => ({
@@ -218,7 +208,7 @@ export default function ArchivesClient({
 								<ApplicationCard
 									key={app.id}
 									application={app as JobApply}
-									isPremium={isPremium}
+									isPremium={false}
 									statusMap={statusMap}
 									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
 									onArchive={handleUnarchiveApplication}
@@ -229,7 +219,7 @@ export default function ArchivesClient({
 								<ApplicationList
 									key={app.id}
 									application={app as JobApply}
-									isPremium={isPremium}
+									isPremium={false}
 									statusMap={statusMap}
 									onEdit={(a: JobApply) => { setSelectedApplication(a as unknown as Application); setPopupType("edit"); }}
 									onArchive={handleUnarchiveApplication}
