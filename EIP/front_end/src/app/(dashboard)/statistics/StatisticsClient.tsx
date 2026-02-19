@@ -788,65 +788,6 @@ function StatisticsContent({
 						</div>
 					</div>
 				</article>
-
-				<article className={styles.chartCard}>
-					<header className={styles.chartHeader}>
-						<h3>{t("statistics.detailedStats") as string}</h3>
-					</header>
-					<div className={styles.chartContainer}>
-						<div className={styles.advancedStats}>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("statistics.interview") as string}
-								</span>
-								<span className={styles.kpiValue}>{stats?.interviewCount || 0}</span>
-							</div>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("statistics.lastApplication") as string}
-								</span>
-								<span className={styles.kpiValue}>
-									{stats?.lastApplicationDate
-										? format(new Date(stats.lastApplicationDate), "dd/MM/yyyy")
-										: ""}
-								</span>
-							</div>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("statistics.monthAverage") as string}
-								</span>
-								<span className={styles.kpiValue}>
-									{statsData?.totals.monthAverage || 0}
-								</span>
-							</div>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("shared.stats.totalApplications") as string}
-								</span>
-								<span className={styles.kpiValue}>
-									{stats?.totalApplications || 0}
-								</span>
-							</div>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("statistics.bestStreak") as string}
-								</span>
-								<span className={styles.kpiValue}>
-									{stats?.bestStreak || stats?.streak || 0}{" "}
-									{t("statistics.days") as string}
-								</span>
-							</div>
-							<div className={styles.statRow}>
-								<span className={styles.comparisonLabel}>
-									{t("statistics.offersReceived") as string}
-								</span>
-								<span className={styles.kpiValue}>
-									{stats?.statusDistribution?.OFFER_RECEIVED || 0}
-								</span>
-							</div>
-						</div>
-					</div>
-				</article>
 			</section>
 		</main>
 	);

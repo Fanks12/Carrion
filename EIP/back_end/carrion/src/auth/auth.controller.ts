@@ -25,6 +25,7 @@ import { MicrosoftAuthGuard } from './guards/microsoft/microsoft-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -343,6 +344,20 @@ export class AuthController {
       resetPasswordDto,
     );
     return { message: 'Your password has been reset successfully.' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('update-password')
+  @ApiOperation({ summary: 'Update user password' })
+  async updatePassword(
+    @Req() req,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    await this.authService.updatePassword(
+      req.user.id,
+      updatePasswordDto.current,
+      updatePasswordDto.new,
+    );
   }
 
   @Public()

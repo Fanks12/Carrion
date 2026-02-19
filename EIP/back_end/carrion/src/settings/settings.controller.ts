@@ -7,6 +7,8 @@ import {
   Request,
   HttpStatus,
   HttpCode,
+  Param,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../auth/guards/jwt/jwt-auth.guard';
@@ -34,6 +36,27 @@ export class SettingsController {
   @ApiResponse({ status: 404, description: 'Settings not found' })
   async getGoalSettings(@Request() req) {
     return this.settingsService.getGoalSettings(req.user.id);
+  }
+
+  @Get('goal/:userId')
+  @ApiOperation({ summary: 'Get a specific user goal settings' })
+  @ApiResponse({
+    status: 200,
+    description: 'User goal settings retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Settings not found' })
+  async getUserGoalSettings(@Param('userId') userId: string, @Request() req) {
+    if (!req.user?.id) {
+      throw new UnauthorizedException('User ID not found in request');
+    }
+
+    try {
+      const result = await this.settingsService.getGoalSettings(userId);
+      return result;
+    } catch (error) {
+      console.error('Error in getUserGoalSettings:', error);
+      throw error;
+    }
   }
 
   @Get('goal/weekly')

@@ -12,6 +12,7 @@ import { orgRolesWithRights } from "@/services/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { StatisticsData } from "@/interface/statistics.interface";
 import StatisticsClient from "../statistics/StatisticsClient";
+import { GoalSettings } from "@/interface/misc.interface";
 
 interface UserProfile {
 	firstName: string | null;
@@ -81,6 +82,7 @@ function OrganizationContent() {
 	const [viewingMember, setViewingMember] = useState<OrganizationMember | null>(null);
 
 	const [viewingMemberStats, setViewingMemberStats] = useState<StatisticsData | null>(null);
+	const [goalMember, setGoalMember] = useState<GoalSettings | null>(null);
 	const [viewingMemberError, setViewingMemberError] = useState<string | null>(null);
 	const [viewingMemberLoading, setViewingMemberLoading] = useState(false);
 
@@ -124,6 +126,8 @@ function OrganizationContent() {
 				) {
 					const statsRes = await ApiService.get<StatisticsData>(`/statistics/${viewingMember?.user.id}`);
 					setViewingMemberStats(statsRes);
+					const goalRes = await ApiService.get<GoalSettings>(`/settings/goal/${viewingMember?.user.id}`);
+					setGoalMember(goalRes);
 				}
 			} catch (error) {
 				console.error("Error fetching member statistics:", error);
@@ -237,7 +241,7 @@ function OrganizationContent() {
 					) : (
 						<StatisticsClient
 							stats={viewingMemberStats}
-							goalSettings={null}
+							goalSettings={goalMember}
 							userRanking={null}
 							error={viewingMemberError}
 						/>

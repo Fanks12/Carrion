@@ -58,7 +58,7 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
 	const handleSuccess = async () => {
 		closeAuthModal();
 		await checkAuthStatus();
-		toast.success(t("auth.loginSuccess") as string);
+		toast.success(t("auth.loginSuccessRedirect") as string);
 	};
 
 	return (
