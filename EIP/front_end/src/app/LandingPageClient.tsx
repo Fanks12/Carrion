@@ -35,7 +35,7 @@ function LandingPageContent() {
 		const successType = searchParams.get("auth");
 		if (successType === "success") {
 			paramsHandled.current = true;
-			toast.success(t("auth.loginSuccessRedirect") as string);
+			toast.success(t("auth.authenticationSuccess") as string);
 			setIsAuthenticated(true);
 			router.replace("/", { scroll: false });
 		}

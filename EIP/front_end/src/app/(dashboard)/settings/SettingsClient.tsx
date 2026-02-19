@@ -8,6 +8,7 @@ import apiService from "@/services/api";
 import { GoalSettings } from "@/interface/misc.interface";
 import styles from "./Settings.module.css";
 import Loading from "@/components/Loading/Loading";
+import ChangePasswordModal from "@/components/ChangePasswordModal/ChangePasswordModal";
 
 interface SettingsClientProps {
 	initialGoalSettings: GoalSettings | null;
@@ -24,6 +25,7 @@ function SettingsContent({
 	const [saving, setSaving] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const [isDisconnecting, setIsDisconnecting] = useState(false);
+	const [isChangingPassword, setisChangingPassword] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [error] = useState<string | null>(initialError);
 	const [goalSettings, setGoalSettings] = useState<GoalSettings>(
@@ -134,6 +136,26 @@ function SettingsContent({
 									? t("settings.disconnecting")
 									: t("settings.disconnectEverything")}
 							</button>
+						</div>
+						<div className={styles.actionItem}>
+							<div className={styles.actionText}>
+								<strong>{t("settings.changePassword") as string}</strong>
+								<p className={styles.actionDescription}>
+									{t("settings.changePasswordDescription") as string}
+								</p>
+							</div>
+							<button
+								onClick={() => setisChangingPassword(true)}
+								className={styles.btnSecondary}
+								disabled={isChangingPassword}
+							>
+								{isChangingPassword
+									? t("settings.changingPassword")
+									: t("settings.changePassword")}
+							</button>
+							<ChangePasswordModal
+							isOpen={isChangingPassword}
+							onClose={() => setisChangingPassword(false)}/>
 						</div>
 						<div className={styles.actionItem}>
 							<div className={styles.actionText}>

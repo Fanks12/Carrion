@@ -176,8 +176,7 @@ class ApiService {
       if (error instanceof Error && error.message === "Token refresh failed") {
         return null;
       }
-      console.error(`POST ${url} failed:`, error);
-      return null;
+      throw error;
     }
   }
 
