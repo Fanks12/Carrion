@@ -6,6 +6,7 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import "./globals.css";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
 import { Toaster } from "react-hot-toast";
+import Metrics from "./metrics";
 
 export const metadata: Metadata = {
 	title: "Carrion",
@@ -27,6 +28,7 @@ export default function RootLayout({
 							<NotificationProvider>
 								{children}
 								<Toaster position="top-right" reverseOrder={false} />
+								<Metrics />
 							</NotificationProvider>
 						</AuthModalProvider>
 					</LanguageProvider>
