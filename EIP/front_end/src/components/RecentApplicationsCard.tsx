@@ -122,7 +122,7 @@ const RecentApplicationsCard = ({
 	const getStatusClassKey = (status?: string) => {
 		if (!status) return "";
 		switch (status) {
-			case "OFFER_ACCEPTED":
+			case "ACCEPTED":
 				return "status-accepted"
 			case "PENDING":
 				return "status-pending"

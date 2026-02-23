@@ -6,6 +6,7 @@ import { useNotifications } from "@/contexts/NotificationContext";
 import Loading from "@/components/Loading/Loading";
 import { Notification } from "@/interface/notification.interface";
 import styles from "./Notification.module.css";
+import { VscBellSlash } from "react-icons/vsc";
 
 function NotificationsContent() {
 	const { t } = useLanguage();
@@ -337,7 +338,7 @@ function NotificationsContent() {
 						))
 					) : (
 						<div className={styles.emptyState}>
-							<div className={styles.emptyIcon}>🔔</div>
+							<div className={styles.emptyIcon}><VscBellSlash className={styles.techIcon} /></div>
 							<h3 className={styles.emptyTitle}>
 								{t("notifications.empty.title") as string}
 							</h3>

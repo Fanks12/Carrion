@@ -116,7 +116,7 @@ function LandingPageContent() {
 				</section>
 
 				<section className={`${styles.servicesSection} ${styles.animateOnScroll}`}>
-					<h2 className={`${styles.sectionsTitle} ${styles.slideUp}`}>
+					<h2 className={`${styles.slideUp}`}>
 						{t("landing.services.title")}
 					</h2>
 					<div className={styles.servicesContent}>
@@ -169,16 +169,16 @@ function LandingPageContent() {
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideLeft}`}>
 							<div className={styles.tutorialImageContainer}>
 								<Image
-										src="/assets/centralize_landing.png"
-										alt="Centralisation"
-										fill
-										sizes="(max-width: 768px) 100vw, 65vw"
-										style={{
-											objectFit: 'contain',
-											objectPosition: 'left'
-										}}
-										priority
-									/>
+									src="/assets/centralize_landing.png"
+									alt="Centralisation"
+									fill
+									sizes="(max-width: 768px) 100vw, 65vw"
+									style={{
+										objectFit: 'contain',
+										objectPosition: 'left'
+									}}
+									priority
+								/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.centralize.title")}</h3>
@@ -188,16 +188,16 @@ function LandingPageContent() {
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideRight}`}>
 							<div className={styles.tutorialImageContainer}>
 								<Image
-										src="/assets/progression_landing.png"
-										alt="Suivi"
-										fill
-										sizes="(max-width: 768px) 100vw, 65vw"
-										style={{
-											objectFit: 'contain',
-											objectPosition: 'right'
-										}}
-										priority
-									/>
+									src="/assets/progression_landing.png"
+									alt="Suivi"
+									fill
+									sizes="(max-width: 768px) 100vw, 65vw"
+									style={{
+										objectFit: 'contain',
+										objectPosition: 'right'
+									}}
+									priority
+								/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.track.title")}</h3>
@@ -207,16 +207,16 @@ function LandingPageContent() {
 						<div className={`${styles.tutorialBox} ${styles.hoverLift} ${styles.tutorialSlideLeft}`}>
 							<div className={styles.tutorialImageContainer}>
 								<Image
-										src="/assets/optimize_landing.jpg"
-										alt="Optimisation"
-										fill
-										sizes="(max-width: 768px) 100vw, 65vw"
-										style={{
-											objectFit: 'contain',
-											objectPosition: 'left'
-										}}
-										priority
-									/>
+									src="/assets/optimize_landing.jpg"
+									alt="Optimisation"
+									fill
+									sizes="(max-width: 768px) 100vw, 65vw"
+									style={{
+										objectFit: 'contain',
+										objectPosition: 'left'
+									}}
+									priority
+								/>
 							</div>
 							<div className={styles.textBox}>
 								<h3>{t("landing.howItWorks.optimize.title")}</h3>
