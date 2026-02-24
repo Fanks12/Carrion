@@ -7,15 +7,13 @@ services:
       - "127.0.0.1:5432:5432"
 
   server:
-    build:
-      dockerfile: Dockerfile
+    image: ton_pseudo_dockerhub/carrion-back:latest
     restart: always
 
   client_web:
-    build:
-      dockerfile: Dockerfile
-      args:
-        - NEXT_PUBLIC_API_URL=https://${DOMAIN_NAME}/api
+    image: ton_pseudo_dockerhub/carrion-front:latest
+    environment:
+      - NEXT_PUBLIC_API_URL=https://${DOMAIN_NAME:-carrion.website}/api
     restart: always
 
   caddy:
