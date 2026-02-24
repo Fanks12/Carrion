@@ -3,15 +3,13 @@ version: "3.8"
 services:
   db:
     restart: always
-    ports:
-      - "127.0.0.1:5432:5432"
 
   server:
-    image: ton_pseudo_dockerhub/carrion-back:latest
+    image: ${DOCKERHUB_USERNAME}/carrion-back:latest
     restart: always
 
   client_web:
-    image: ton_pseudo_dockerhub/carrion-front:latest
+    image: ${DOCKERHUB_USERNAME}/carrion-front:latest
     environment:
       - NEXT_PUBLIC_API_URL=https://${DOMAIN_NAME:-carrion.website}/api
     restart: always
