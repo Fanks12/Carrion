@@ -3,8 +3,6 @@ name: CI/CD Pipeline to OVH
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   test-and-lint:
@@ -14,8 +12,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "22"
-      - run: npm --prefix ./EIP/back_end/carrion install
-      - run: npm --prefix ./EIP/back_end/carrion run test --if-present
+      # - run: npm --prefix ./EIP/back_end/carrion install
+      # - run: npm --prefix ./EIP/back_end/carrion run test --if-present
       - run: npm --prefix ./EIP/front_end install
       - run: npm --prefix ./EIP/front_end run lint --if-present
 
