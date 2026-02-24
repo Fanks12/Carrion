@@ -5,10 +5,14 @@ services:
     restart: always
 
   server:
+    env_file:
+      - ./EIP/back_end/carrion/.env
     image: ${DOCKERHUB_USERNAME}/carrion-back:latest
     restart: always
 
   client_web:
+    env_file:
+      - ./EIP/front_end/.env
     image: ${DOCKERHUB_USERNAME}/carrion-front:latest
     environment:
       - NEXT_PUBLIC_API_URL=https://${DOMAIN_NAME:-carrion.website}/api
