@@ -9,34 +9,22 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
       - back-tier
 
   server:
-    build:
-      context: ./EIP/back_end/carrion
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
-      - SERVER_PORT=${API_PORT:-8080}
+      - SERVER_PORT=8080
     networks:
       - back-tier
       - api-tier
+    depends_on:
+      - db
 
   client_web:
-    build:
-      context: ./EIP/front_end/
     networks:
       - api-tier
-    environment:
-      - INTERNAL_API_URL=http://server:8080/api
 
 networks:
   back-tier:
@@ -46,4 +34,3 @@ networks:
 
 volumes:
   pg_data:
-  common:
