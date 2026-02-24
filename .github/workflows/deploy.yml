@@ -1,0 +1,54 @@
+name: CI/CD Pipeline to OVH
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+      # - run: npm --prefix ./EIP/back_end/carrion install
+      # - run: npm --prefix ./EIP/back_end/carrion run test --if-present
+      - run: npm --prefix ./EIP/front_end install
+      - run: npm --prefix ./EIP/front_end run lint --if-present
+
+  build-and-push:
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - uses: docker/build-push-action@v3
+        with:
+          context: ./EIP/back_end/carrion
+          file: ./EIP/back_end/carrion/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/carrion-back:latest
+      - uses: docker/build-push-action@v3
+        with:
+          context: ./EIP/front_end
+          file: ./EIP/front_end/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/carrion-front:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/EIP
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
