@@ -129,6 +129,8 @@ export default function ArchivesClient({
 			pending: applications.filter((app) => app.status === ApplicationStatus.PENDING).length,
 			offerReceived: applications.filter((app) => app.status === ApplicationStatus.OFFER_RECEIVED).length,
 			refused: applications.filter((app) => app.status === ApplicationStatus.REJECTED_BY_COMPANY).length,
+			accepted: applications.filter((app) => app.status === ApplicationStatus.OFFER_ACCEPTED).length,
+			interviewScheduled: applications.filter((app) => app.status === ApplicationStatus.INTERVIEW_SCHEDULED).length,
 		}),
 		[applications]
 	);
@@ -164,6 +166,10 @@ export default function ArchivesClient({
 						<h3 className={styles.statTitle}>{t("shared.stats.pending")}</h3>
 						<p className={styles.statValue}>{stats.pending}</p>
 					</div>
+					<div className={`${styles.statCard} ${styles.interview}`}>
+						<h3 className={styles.statTitle}>{t("shared.stats.interviews")}</h3>
+						<p className={styles.statValue}>{stats.interviewScheduled}</p>
+					</div>
 					<div className={`${styles.statCard} ${styles.accepted}`}>
 						<h3 className={styles.statTitle}>{t("shared.stats.accepted")}</h3>
 						<p className={styles.statValue}>{stats.offerReceived}</p>
@@ -177,7 +183,6 @@ export default function ArchivesClient({
 				<section className={styles.archivesControls}>
 					<div className={styles.filterContainer}>
 						{(Object.keys(statusMap) as ApplicationStatus[])
-							.filter((key) => ["OFFER_RECEIVED", "PENDING", "REJECTED_BY_COMPANY"].includes(key))
 							.map((statusKey) => (
 								<label key={statusKey} className={styles.filterCheckbox}>
 									<input

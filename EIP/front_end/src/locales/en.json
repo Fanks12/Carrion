@@ -963,7 +963,7 @@
       "free": {
         "name": "Free",
         "description": "To discover the platform.",
-        "feature1": "Auto-tracking: 5 apps *",
+        "feature1": "Auto-tracking: 5 applications *",
         "feature2": "Unlimited manual tracking",
         "feature3": "Dashboard access",
         "feature4": "Secure data"
@@ -973,7 +973,7 @@
         "description": "To remove all limits.",
         "feature1": "Auto-tracking: Unlimited *",
         "feature2": "Unlimited manual tracking",
-        "feature3": "Support the project ❤️",
+        "feature3": "Support the project",
         "feature4": "Future updates included"
       },
       "enterprise": {

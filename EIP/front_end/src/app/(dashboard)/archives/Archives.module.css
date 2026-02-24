@@ -305,6 +305,12 @@
 .statCard.pending .statValue {
   color: #f59e0b;
 }
+.statCard.interview .statValue {
+  color: #3b82f6;
+}
+.statCard.offer .statValue {
+  color: #10b981;
+}
 .statCard.accepted .statValue {
   color: #10b981;
 }

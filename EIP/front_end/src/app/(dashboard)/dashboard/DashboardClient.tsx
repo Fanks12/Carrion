@@ -56,6 +56,7 @@ export default function DashboardClient({ initialApplications, error: initialErr
 				app.status === ApplicationStatus.OFFER_ACCEPTED
 			).length,
 			refused: applications.filter((app) => app.status === ApplicationStatus.REJECTED_BY_COMPANY).length,
+			interviewScheduled: applications.filter((app) => app.status === ApplicationStatus.INTERVIEW_SCHEDULED).length,
 		}),
 		[applications]
 	);
@@ -174,6 +175,10 @@ export default function DashboardClient({ initialApplications, error: initialErr
 					<div className={`${styles.statCard} ${styles.pending}`}>
 						<h3 className={styles.statTitle}>{t("shared.stats.pending")}</h3>
 						<p className={styles.statValue}>{stats.pending}</p>
+					</div>
+					<div className={`${styles.statCard} ${styles.interview}`}>
+						<h3 className={styles.statTitle}>{t("shared.stats.interviews")}</h3>
+						<p className={styles.statValue}>{stats.interviewScheduled}</p>
 					</div>
 					<div className={`${styles.statCard} ${styles.accepted}`}>
 						<h3 className={styles.statTitle}>{t("shared.stats.accepted")}</h3>
