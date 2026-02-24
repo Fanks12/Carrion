@@ -344,7 +344,7 @@ ADVANCED SCHEMA`,
         id: 'test-2',
         subject: 'Votre candidature a été envoyée à HONOR',
         body: `LinkedIn	
-Pascal Lin
+Martin Maillonseau
 Votre candidature a été envoyée à HONOR
 HONOR	
 Data Engineer Intern (pour une durée de 3 à 6 mois, ASAP)

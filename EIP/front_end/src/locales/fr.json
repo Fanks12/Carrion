@@ -479,7 +479,8 @@
         "logo_url": "https://exemple.com",
         "website": "URL du site web de l'entreprise",
         "interviewDateTime": "Sélectionnez la date et l'heure",
-        "interviewDate": "Sélectionnez la date et l'heure de l'entretien"
+        "interviewDate": "Sélectionnez la date et l'heure de l'entretien",
+        "contract_type": "Type de contrat"
       },
       "contract_types": {
         "full_time": "Temps plein",

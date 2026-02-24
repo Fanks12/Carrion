@@ -359,13 +359,13 @@
     },
     "statuses": {
       "PENDING": "Pending response",
-      "ACCEPTED": "Accepted",
+      "OFFER_ACCEPTED": "Accepted",
       "REJECTED": "Rejected",
       "INTERVIEW_SCHEDULED": "Interview",
       "INTERVIEW": "Interview",
       "REJECTED_BY_COMPANY": "Rejected",
       "ON": "Accepted",
-      "OFFER": "Offer received"
+      "OFFER_RECEIVED": "Offer received"
     },
     "empty": {
       "title": "No applications found",
@@ -477,7 +477,8 @@
         "logo_url": "https://example.com",
         "website": "Company website URL",
         "interviewDateTime": "Select date and time",
-        "interviewDate": "Select interview date and time"
+        "interviewDate": "Select interview date and time",
+        "contract_type": "Select contract type"
       },
       "contract_types": {
         "full_time": "Full-time",
@@ -973,7 +974,7 @@
         "description": "To remove all limits.",
         "feature1": "Auto-tracking: Unlimited *",
         "feature2": "Unlimited manual tracking",
-        "feature3": "Support the project ❤️",
+        "feature3": "Support the project <3",
         "feature4": "Future updates included"
       },
       "enterprise": {
