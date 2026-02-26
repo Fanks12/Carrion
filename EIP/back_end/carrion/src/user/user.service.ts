@@ -81,6 +81,7 @@ export class UserService {
         hashedRefreshToken: true,
         role: true,
         isEmailVerified: true,
+        password: true,
         tokens: {
           select: {
             name: true,
@@ -118,7 +119,12 @@ export class UserService {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    return user;
+    const { password, ...userWithoutPassword } = user;
+
+    return {
+      ...userWithoutPassword,
+      hasPassword: !!password,
+    };
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

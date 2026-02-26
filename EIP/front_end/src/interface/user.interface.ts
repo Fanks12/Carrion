@@ -5,6 +5,7 @@ export interface UserProfile {
   email: string;
   username: string;
   isEmailVerified: boolean;
+  hasPassword?: boolean;
   userProfile: {
     firstName: string;
     lastName: string;

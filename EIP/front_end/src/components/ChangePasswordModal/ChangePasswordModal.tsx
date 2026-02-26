@@ -6,15 +6,16 @@ import styles from "./ChangePasswordModal.module.css";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { FiEye, FiEyeOff, FiCheckCircle, FiXCircle, FiX } from "react-icons/fi";
 import { passwordRegEX } from "@/services/utils";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
 	isOpen: boolean;
 	onClose: () => void;
+	hasCurrentPassword?: boolean;
 }
 
-export default function ChangePasswordModal({ isOpen, onClose }: Props) {
+export default function ChangePasswordModal({ isOpen, onClose, hasCurrentPassword = true }: Props) {
 	const { t } = useLanguage();
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
@@ -63,7 +64,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: Props) {
 		setIsSubmitting(true);
 		try {
 			await apiService.post("/auth/update-password", {
-				current: currentPassword,
+				current: hasCurrentPassword ? currentPassword : null,
 				new: newPassword
 			});
 			toast.success(t("settings.passwordUpdateSuccess") as string);
@@ -84,25 +85,28 @@ export default function ChangePasswordModal({ isOpen, onClose }: Props) {
 	return (
 		<div className={styles.overlay} onClick={onClose}>
 			<div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-				<button className={styles.closeHeader} onClick={onClose}>
+				<button type="button" className={styles.closeHeader} onClick={onClose}>
 					<FiX size={24} />
 				</button>
 
-				<h2 className={styles.title}>{t("settings.changePassword")}</h2>
+				<h2 className={styles.title}>{t("settings.changePassword") as string || "Modify your password"}</h2>
 
 				<form onSubmit={handleSubmit} className={styles.form}>
-					<div className={styles.inputGroup}>
-						<label>{t("settings.currentPassword")}</label>
-						<input
-							type={showPasswords ? "text" : "password"}
-							value={currentPassword}
-							onChange={(e) => setCurrentPassword(e.target.value)}
-							required
-						/>
-					</div>
+
+					{hasCurrentPassword && (
+						<div className={styles.inputGroup}>
+							<label>{t("settings.currentPassword") as string || "Your current password"}</label>
+							<input
+								type={showPasswords ? "text" : "password"}
+								value={currentPassword}
+								onChange={(e) => setCurrentPassword(e.target.value)}
+								required={hasCurrentPassword}
+							/>
+						</div>
+					)}
 
 					<div className={styles.inputGroup}>
-						<label>{t("auth.newPassword")}</label>
+						<label>{t("auth.newPassword") as string || "New password"}</label>
 						<div className={styles.passwordWrapper}>
 							<input
 								type={showPasswords ? "text" : "password"}
@@ -113,23 +117,27 @@ export default function ChangePasswordModal({ isOpen, onClose }: Props) {
 								}}
 								required
 							/>
-							<span onClick={() => setShowPasswords(!showPasswords)} className={styles.eyeIcon}>
+							<button
+								type="button"
+								onClick={() => setShowPasswords(!showPasswords)}
+								className={styles.eyeIcon}
+								tabIndex={-1}
+							>
 								{showPasswords ? <FiEyeOff /> : <FiEye />}
-							</span>
+							</button>
 						</div>
 					</div>
 
-					{/* Criteria List Implementation */}
 					<ul className={styles.passwordCriteria}>
-						<ValidationCriterion isValid={passwordCriteria.length} text={t("auth.criteria.length") as string} />
-						<ValidationCriterion isValid={passwordCriteria.upper} text={t("auth.criteria.upper") as string} />
-						<ValidationCriterion isValid={passwordCriteria.lower} text={t("auth.criteria.lower") as string} />
-						<ValidationCriterion isValid={passwordCriteria.number} text={t("auth.criteria.number") as string} />
-						<ValidationCriterion isValid={passwordCriteria.special} text={t("auth.criteria.special") as string} />
+						<ValidationCriterion isValid={passwordCriteria.length} text={t("auth.criteria.length") as string || "At least 8 characters"} />
+						<ValidationCriterion isValid={passwordCriteria.upper} text={t("auth.criteria.upper") as string || "Contains an uppercase letter"} />
+						<ValidationCriterion isValid={passwordCriteria.lower} text={t("auth.criteria.lower") as string || "Contains a lowercase letter"} />
+						<ValidationCriterion isValid={passwordCriteria.number} text={t("auth.criteria.number") as string || "Contains a number"} />
+						<ValidationCriterion isValid={passwordCriteria.special} text={t("auth.criteria.special") as string || "Contains a special character"} />
 					</ul>
 
 					<div className={styles.inputGroup}>
-						<label>{t("settings.confirmNewPassword")}</label>
+						<label>{t("settings.confirmNewPassword") as string || "Confirm new password"}</label>
 						<input
 							type={showPasswords ? "text" : "password"}
 							value={confirmPassword}
@@ -141,10 +149,10 @@ export default function ChangePasswordModal({ isOpen, onClose }: Props) {
 
 					<div className={styles.actions}>
 						<button type="button" className={styles.cancelBtn} onClick={onClose}>
-							{t("common.cancel")}
+							{t("common.cancel") as string || "Cancel"}
 						</button>
 						<PrimaryButton
-							text={isSubmitting ? t("common.loading") as string : t("common.confirm") as string}
+							text={isSubmitting ? (t("common.loading") as string || "Loading...") : (t("common.confirm") as string || "Confirm")}
 							type="submit"
 							disabled={isSubmitting}
 						/>

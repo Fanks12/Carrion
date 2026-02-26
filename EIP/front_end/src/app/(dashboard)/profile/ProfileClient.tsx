@@ -15,6 +15,7 @@ import { jobSectors } from "@/data/jobSectors";
 import { contractOptions } from "@/data/contractOptions";
 import ServicesCard from "@/components/ServicesCard/ServicesCard";
 import AddServiceModal from "@/components/AddServiceModal/AddServiceModal";
+import ChangePasswordModal from "@/components/ChangePasswordModal/ChangePasswordModal";
 import CustomDateInput from "@/components/CustomDateInput";
 import CvCard from "@/components/CvCard/CvCard";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -71,6 +72,7 @@ function ProfileContent({
 	const [uploadedImage, setUploadedImage] = useState<string | null>(initialProfilePictureUrl);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 	const [uploading, setUploading] = useState(false);
 	const [uploadingCv, setUploadingCv] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -163,11 +165,11 @@ function ProfileContent({
 
 		try {
 			await toast.promise(savePromise, {
-				loading: (t("profile.saving") as string) || "Enregistrement...",
-				success: (t("profile.saveSuccess") as string) || "Profil enregistré !",
+				loading: (t("profile.saving") as string) || "Saving...",
+				success: (t("profile.saveSuccess") as string) || "Profile saved!",
 				error: (err: unknown) => {
-					const message = err instanceof Error ? err.message : "Erreur inconnue";
-					return `Erreur: ${message}`;
+					const message = err instanceof Error ? err.message : "Unknown error";
+					return `Error: ${message}`;
 				},
 			});
 
@@ -190,7 +192,7 @@ function ProfileContent({
 				setUserProfile(updatedContextProfile);
 			}
 		} catch (error) {
-			console.error("Erreur critique sauvegarde", error);
+			console.error("Critical save error", error);
 		}
 	};
 
@@ -210,16 +212,16 @@ function ProfileContent({
 	);
 
 	const handleDisconnectService = async (serviceName: string) => {
-		if (!window.confirm(`Déconnecter le service ?`)) return;
+		if (!window.confirm(`Disconnect the service?`)) return;
 		const disconnectPromise = apiService.delete(`/user-profile/services/${serviceName}`);
 
 		await toast.promise(disconnectPromise, {
-			loading: "Déconnexion...",
+			loading: "Disconnecting...",
 			success: () => {
 				setConnectedServices((prev) => prev.filter((s) => s.name !== serviceName));
-				return "Service déconnecté !";
+				return "Service disconnected!";
 			},
-			error: "Erreur déconnexion.",
+			error: "Disconnection error.",
 		});
 	};
 
@@ -251,7 +253,7 @@ function ProfileContent({
 				{}
 			);
 
-			if (!response?.signedUrl) throw new Error("Erreur URL upload");
+			if (!response?.signedUrl) throw new Error("Upload URL error");
 
 			await fetch(response.signedUrl, {
 				method: "PUT",
@@ -263,10 +265,10 @@ function ProfileContent({
 			if (downloadResponse?.signedUrl) {
 				setUploadedImage(downloadResponse.signedUrl);
 			}
-			toast.success("Image mise à jour !");
+			toast.success("Image updated!");
 		} catch (error: unknown) {
-			const msg = error instanceof Error ? error.message : "Erreur inconnue";
-			toast.error(`Erreur upload image: ${msg}`);
+			const msg = error instanceof Error ? error.message : "Unknown error";
+			toast.error(`Image upload error: ${msg}`);
 			setUploadedImage(initialProfilePictureUrl);
 		} finally {
 			setUploading(false);
@@ -296,7 +298,7 @@ function ProfileContent({
 				`/s3/upload?filename=cv&contentType=${file.type}`,
 				{}
 			);
-			if (!response?.signedUrl) throw new Error("Erreur URL upload");
+			if (!response?.signedUrl) throw new Error("Upload URL error");
 
 			await fetch(response.signedUrl, {
 				method: "PUT",
@@ -305,22 +307,22 @@ function ProfileContent({
 			});
 			const newCvData = await apiService.get<{ signedUrl: string }>(`/s3/download?filename=cv`);
 			if (newCvData?.signedUrl) setCvUrl(newCvData.signedUrl);
-			toast.success("CV téléchargé !");
+			toast.success("CV uploaded!");
 		} catch {
-			toast.error("Erreur envoi CV");
+			toast.error("CV upload error");
 		} finally {
 			setUploadingCv(false);
 		}
 	};
 
 	const handleCvDelete = async () => {
-		if (!window.confirm("Supprimer le CV ?")) return;
+		if (!window.confirm("Delete CV?")) return;
 		try {
 			await apiService.delete(`/s3/delete?filename=cv`, {});
 			setCvUrl(null);
-			toast.success("CV supprimé !");
+			toast.success("CV deleted!");
 		} catch {
-			toast.error("Erreur suppression CV");
+			toast.error("CV deletion error");
 		}
 	};
 
@@ -338,7 +340,7 @@ function ProfileContent({
 
 	const getLocationObjects = (vals: string[] | undefined) => vals?.map((v) => ({ label: v, value: v })) || [];
 
-	if (initialError) return <main className={styles.profilePage}>Erreur: {initialError}</main>;
+	if (initialError) return <main className={styles.profilePage}>Error: {initialError}</main>;
 
 	return (
 		<>
@@ -375,7 +377,7 @@ function ProfileContent({
 										<button
 											onClick={handleDeleteProfilePicture}
 											className={styles.deleteButton}
-											title="Supprimer"
+											title="Delete"
 											type="button"
 										>
 											×
@@ -399,7 +401,25 @@ function ProfileContent({
 
 					<form className={styles.profileLeftColumn} id="profile-form" onSubmit={handleSubmit}>
 						<article className={styles.profileCard}>
-							<h2>{t("profile.personalInfo") as string}</h2>
+							<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+								<h2 style={{ margin: 0 }}>{t("profile.personalInfo") as string}</h2>
+								<button
+									type="button"
+									onClick={() => setIsPasswordModalOpen(true)}
+									style={{
+										backgroundColor: "transparent",
+										border: "1px solid #d1d5db",
+										color: "inherit",
+										padding: "0.5rem 1rem",
+										borderRadius: "0.375rem",
+										cursor: "pointer",
+										fontSize: "0.875rem",
+										fontWeight: 500
+									}}
+								>
+									{t("settings.changePassword") as string || "Change Password"}
+								</button>
+							</div>
 							<div className={styles.profileInfoForm}>
 								<div className={styles.formGrid}>
 
@@ -621,6 +641,11 @@ function ProfileContent({
 				onClose={() => setIsModalOpen(false)}
 				connectedServices={connectedServices}
 			/>
+			<ChangePasswordModal
+				isOpen={isPasswordModalOpen}
+				onClose={() => setIsPasswordModalOpen(false)}
+				hasCurrentPassword={authProfile?.hasPassword}
+			/>
 		</>
 	);
 }
@@ -631,7 +656,7 @@ export default function ProfileClient(props: ProfileClientProps) {
 
 	useEffect(() => {
 		if (props.shouldRetry) {
-			console.log("Client: Token manquait au serveur, tentative de refresh...");
+			console.log("Client: Token missing from server, attempting refresh...");
 			router.refresh();
 		} else {
 			setIsRetrying(false);

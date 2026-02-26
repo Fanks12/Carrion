@@ -361,7 +361,7 @@
     },
     "statuses": {
       "PENDING": "En attente de réponse",
-      "ACCEPTED": "Acceptée",
+      "OFFER_ACCEPTED": "Acceptée",
       "REJECTED": "Refusée",
       "INTERVIEW_SCHEDULED": "Entretien",
       "INTERVIEW": "Entretien",

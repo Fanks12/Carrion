@@ -20,7 +20,7 @@ function SettingsContent({
 	error: initialError,
 }: SettingsClientProps) {
 	const { t } = useLanguage();
-	const { logOut } = useAuth();
+	const { logOut, userProfile } = useAuth();
 
 	const [saving, setSaving] = useState(false);
 	const [success, setSuccess] = useState(false);
@@ -84,7 +84,7 @@ function SettingsContent({
 			setIsDeleting(true);
 			try {
 				await apiService.delete("/user/me", {});
-				toast.success(t("settings.sucessDeleteAccount") as string);
+				toast.success(t("settings.successDeleteAccount") as string);
 				logOut();
 			} catch (err: unknown) {
 				const errorMessage =
@@ -154,8 +154,10 @@ function SettingsContent({
 									: t("settings.changePassword")}
 							</button>
 							<ChangePasswordModal
-							isOpen={isChangingPassword}
-							onClose={() => setisChangingPassword(false)}/>
+								isOpen={isChangingPassword}
+								onClose={() => setisChangingPassword(false)}
+								hasCurrentPassword={userProfile?.hasPassword}
+							/>
 						</div>
 						<div className={styles.actionItem}>
 							<div className={styles.actionText}>
