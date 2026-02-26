@@ -8,6 +8,7 @@ import { FiEye, FiEyeOff, FiCheckCircle, FiXCircle, FiX } from "react-icons/fi";
 import { passwordRegEX } from "@/services/utils";
 import toast from "react-hot-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
 	isOpen: boolean;
@@ -17,11 +18,14 @@ interface Props {
 
 export default function ChangePasswordModal({ isOpen, onClose, hasCurrentPassword = true }: Props) {
 	const { t } = useLanguage();
+	const { userProfile } = useAuth();
+
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [showPasswords, setShowPasswords] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isResetting, setIsResetting] = useState(false);
 
 	const [passwordCriteria, setPasswordCriteria] = useState({
 		length: false,
@@ -67,18 +71,38 @@ export default function ChangePasswordModal({ isOpen, onClose, hasCurrentPasswor
 				current: hasCurrentPassword ? currentPassword : null,
 				new: newPassword
 			});
-			toast.success(t("settings.passwordUpdateSuccess") as string);
+			toast.success(t("settings.passwordUpdateSuccess") as string || "Password successfully updated");
 			setTimeout(onClose, 1500);
 		} catch (error: unknown) {
 			const message = (error as Error).message;
 
 			if (message.includes("Incorrect current password")) {
-				toast.error(t("settings.currentPasswordIncorrect") as string);
+				toast.error(t("settings.currentPasswordIncorrect") as string || "Incorrect current password");
 			} else {
-				toast.error(t("auth.genericError") as string);
+				toast.error(t("auth.genericError") as string || "An error occurred");
 			}
 		} finally {
 			setIsSubmitting(false);
+		}
+	};
+
+	const handleForgotPassword = async () => {
+		if (!userProfile?.email) {
+			return toast.error(t("auth.genericError") as string || "Email not found");
+		}
+
+		setIsResetting(true);
+		try {
+			await apiService.post("/auth/forgot-password", {
+				email: userProfile.email
+			});
+			toast.success(t("auth.resetLinkSent") as string || "Reset link sent to your email!");
+			onClose()
+		} catch (err) {
+			console.error("Forgot password error:", err);
+			toast.error(t("auth.genericError") as string || "An error occurred");
+		} finally {
+			setIsResetting(false);
 		}
 	};
 
@@ -95,7 +119,19 @@ export default function ChangePasswordModal({ isOpen, onClose, hasCurrentPasswor
 
 					{hasCurrentPassword && (
 						<div className={styles.inputGroup}>
-							<label>{t("settings.currentPassword") as string || "Your current password"}</label>
+							<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								<label>{t("settings.currentPassword") as string || "Your current password"}</label>
+
+								<button
+									type="button"
+									onClick={handleForgotPassword}
+									disabled={isResetting}
+									className={styles.forgotPasswordBtn}
+								>
+									{isResetting ? "..." : (t("auth.forgotPassword") as string || "Forgot password?")}
+								</button>
+							</div>
+
 							<input
 								type={showPasswords ? "text" : "password"}
 								value={currentPassword}

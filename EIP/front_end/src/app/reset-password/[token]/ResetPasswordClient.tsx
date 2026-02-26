@@ -115,7 +115,7 @@ export default function ResetPasswordClient() {
 			toast.success(t("auth.resetSuccess") as string);
 
 			setTimeout(() => {
-				router.push("/?auth=signin");
+				router.push("/dashboard");
 			}, 3000);
 
 		} catch (error: unknown) {
